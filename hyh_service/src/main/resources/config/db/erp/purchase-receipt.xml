@@ -1,0 +1,29 @@
+<sql-config namespace="PURCHASERECEIPT">
+    <sql name="SQL_ADD_PURCHASERECEIPT">
+        <value><![CDATA[INSERT INTO purchase_receipt ( receipt_number,from_bills_no, partner_id, bill_date, inbound_storage_id, summary, is_draft, total_price, gift_price, favorable_price, pay_price, create_date, create_by, owner)VALUES (?,?,?,?,?,?,?,?,?,?,?,now(),?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_PURCHASERECEIPTITEM">
+        <value><![CDATA[INSERT INTO purchase_receipt_item ( receipt_number, material_id, counts, purchase_price, discount_rate,after_discount, tax_rate, tax, batch_number, production_date,due_date, total, is_gift, remark, create_date,create_by)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, now(),?)]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASERECEIPT">
+        <value><![CDATA[DELETE FROM purchase_receipt WHERE receipt_number in (?) and is_draft = 1]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASERECEIPTITEM">
+        <value><![CDATA[DELETE FROM purchase_receipt_item WHERE receipt_number in (?)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASERECEIPT_BYID">
+        <value><![CDATA[SELECT pr.receipt_number receiptNumber, pr.partner_id supplierId,pr.owner owner, bp.partner_code supplierCode,  bp.partner_name supplierName, bp.contacts_first_name contactsFirstName, bp.contacts_last_name contactsLastName, bp.mobilephone mobile,  pr.bill_date billDate,  pr.inbound_storage_id inBoundStorage,  pr.is_draft isDraft, s.storage_name inBoundStorageName,  pr.summary summary, pr.total_price totalAmount, pr.gift_price giftAmount,   pr.favorable_price discountAmount,   pr.pay_price payAmount, pr.create_date createDate,  pr.create_by createBy,  u.user_name createByName,  pr.audit_date auditDate, pr.auditor auditBy, u2.user_name ownerName FROM purchase_receipt pr LEFT JOIN business_partner bp ON pr.partner_id = bp.id left JOIN `storage` s on pr.inbound_storage_id = s.id LEFT JOIN usr u ON pr.create_by = u.id left join usr u2 on pr.owner = u2.id WHERE receipt_number = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASERECEIPTITEMS">
+        <value><![CDATA[SELECT item.receipt_number receiptNumber, item.id id, item.material_id materialId, m.material_no materialNo, m.material_name materialName, item.remark remark, m.specifications_model specificationsModel, m.brand brand, m.season season, m.barcode barcode, m.unit_id unitId, u.unit_name unitName, item.counts counts, item.purchase_price purchasePrice, item.discount_rate discountRate,item.after_discount afterDiscount, item.tax_rate taxRate, item.tax, item.batch_number batchNumber, item.production_date productionDate, m.is_batch isBatch, item.total, item.is_gift isGift FROM purchase_receipt_item item left join material m ON item.material_id = m.id LEFT JOIN material_unit u ON m.unit_id = u.id WHERE item.receipt_number = ? ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PURCHASERECEIPT">
+        <value><![CDATA[UPDATE purchase_receipt SET partner_id=?, inbound_storage_id=?, summary=?, is_draft=?, total_price=?, gift_price=?, favorable_price=?, pay_price=?, bill_date=?, audit_date=?, auditor=? where receipt_number=? ]]></value>
+    </sql>
+    <sql name="SQL_FILL_RECEIPT_COUNTS">
+        <value><![CDATA[UPDATE purchase_order_item SET receipt_counts =(?+receipt_counts) where row_number = ? and order_number= ?]]></value>
+    </sql>
+    <sql name="CHECK_BATCH_NUMBER">
+        <value><![CDATA[SELECT count(*) FROM material_batch batch WHERE batch.batch_number =? AND batch.material_id =?]]></value>
+    </sql>
+</sql-config>

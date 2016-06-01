@@ -1,0 +1,32 @@
+<sql-config namespace="PURCHASEORDER">
+    <sql name="SQL_ADD_PURCHASEORDER">
+        <value><![CDATA[INSERT INTO purchase_order ( order_number,from_bills_no, partner_id, bill_date, receipt_date, inbound_storage_id, summary, is_draft, total_price, gift_price, favorable_price, pay_price, create_date, create_by,owner,currency,exchange_rate)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_PURCHASEORDERITEM">
+        <value><![CDATA[INSERT INTO purchase_order_item ( order_number, material_id, counts, purchase_price, discount_rate,after_discount, tax_rate, tax, total, is_gift, remark, create_date , row_number , from_bills_no,currency_price)VALUES (?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASEORDER">
+        <value><![CDATA[DELETE FROM purchase_order WHERE order_number in (?) and is_draft = 1]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASEORDERITEM">
+        <value><![CDATA[DELETE FROM purchase_order_item WHERE order_number in (?)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASEORDER_BYID">
+        <value><![CDATA[SELECT po.order_number orderNumber,po.currency,po.exchange_rate,po.owner, po.partner_id supplierId, bp.partner_code supplierCode, bp.partner_name supplierName, bp.contacts_first_name contactsFirstName, bp.contacts_last_name contactsLastName, bp.mobilephone mobile, po.bill_date billDate, po.receipt_date receiptDate, po.inbound_storage_id inBoundStorage, s.storage_name inBoundStorageName, po.summary summary, po.total_price totalAmount, po.gift_price giftAmount, po.favorable_price discountAmount, po.pay_price payAmount, po.create_date createDate, po.create_by createBy, po.is_draft isDraft, u.user_name createByName, po.audit_date auditDate, po.auditor auditBy, po.status,po.ready_status readyStatus, u2.user_name auditByName,u3.user_name ownerName FROM purchase_order po LEFT JOIN business_partner bp ON po.partner_id = bp.id LEFT JOIN `storage` s ON s.id = po.inbound_storage_id left join usr u on u.id = po.create_by left join usr u2 on u2.id = po.create_by left join usr u3 on po.owner=u3.id WHERE order_number = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASEORDERITEMS">
+        <value><![CDATA[SELECT item.order_number orderNumber,item.currency_price,item.id id, item.material_id materialId ,item.ready_status readyStatus,m.material_no materialNo, m.material_name materialName, m.description description, m.specifications_model specificationsModel, m.brand brand, m.season season, m.barcode barcode, m.unit_id unitId,m.expiration_date expirationDate,m.is_batch isBatch, u.unit_name unitName, item.counts counts, item.purchase_price purchasePrice, item.discount_rate discountRate,item.after_discount afterDiscount, item.tax_rate taxRate, item.tax, item.total amount, item.is_gift isGift, item.receipt_counts receiptCounts, item.remark ,item.row_number rowNumber,t.type_name typeName FROM purchase_order_item item left join material m ON item.material_id = m.id LEFT JOIN material_unit u ON m.unit_id = u.id LEFT JOIN material_type t ON m.material_type = t.id WHERE item.order_number = ? ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PURCHASEORDER">
+        <value><![CDATA[UPDATE purchase_order SET partner_id=?, inbound_storage_id=?, summary=?, is_draft=?, total_price=?, gift_price=?, favorable_price=?, pay_price=?, receipt_date=?, bill_date=?, auditor=?, audit_date=now() where order_number=? ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_STATUS">
+        <value><![CDATA[UPDATE purchase_order SET status= ? where order_number=? ]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASEORDERITEMS_BY_ROWNUMBER">
+        <value><![CDATA[SELECT item.order_number orderNumber, item.id id, item.material_id materialId ,item.ready_status readyStatus,m.material_no materialNo, m.material_name materialName, m.description description, m.specifications_model specificationsModel, m.brand brand, m.season season, m.barcode barcode, m.unit_id unitId,m.expiration_date expirationDate,m.is_batch isBatch, u.unit_name unitName, item.counts counts, item.purchase_price purchasePrice, item.discount_rate discountRate,item.after_discount afterDiscount, item.tax_rate taxRate, item.tax, item.total amount, item.is_gift isGift, item.receipt_counts receiptCounts, item.remark ,item.row_number rowNumber FROM purchase_order_item item left join material m ON item.material_id = m.id LEFT JOIN material_unit u ON m.unit_id = u.id WHERE item.order_number = ? and item.row_number = ?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_RECEIPT_COUNTS">
+        <value><![CDATA[UPDATE purchase_order_item SET receipt_counts = receipt_counts+? WHERE row_number=? AND order_number =? ]]></value>
+    </sql>
+</sql-config>

@@ -1,0 +1,5 @@
+<sql-config namespace="BULKPARTNERERRORS">
+    <sql name="SQL_BATCH_INSERT_BULKPARTNERERRORS">
+        <value><![CDATA[INSERT INTO bulk_partner_errors(partner_code,partner_type,partner_name,foreign_name,partner_group,phone,mobilephone,fax,email,website,bank_account,contacts_last_name,contacts_first_name,contacts_gender,contacts_phone,contacts_mobilephone,contacts_description,address,transaction_id,error_messages,create_date,create_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)]]></value>
+    </sql>
+</sql-config>

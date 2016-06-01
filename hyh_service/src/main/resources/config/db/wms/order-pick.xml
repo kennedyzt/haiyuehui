@@ -1,0 +1,17 @@
+<sql-config namespace="ORDERPICK">
+    <sql name="SQL_ADD_ORDER_PICK">
+        <value><![CDATA[INSERT INTO order_pick(order_number,from_bills_no, bills_date, owner, storage_id, sku_counts, material_counts, create_date, create_by) VALUES(?,?,NOW(),?,?,?,?,NOW(),?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_ORDER_PICK_ITEM">
+        <value><![CDATA[INSERT INTO order_pick_item( order_number,from_bills_no,ec_order_number, material_id,batch_number,production_date, counts,storage_location_id ,create_date, create_by ) VALUES(?,?,?,?,?,?,?,?,NOW(),?)]]></value>
+    </sql>
+    <sql name="SQl_GET_ORDER_PICK">
+        <value><![CDATA[SELECT o.order_number,o.from_bills_no,o.bills_date,o.storage_id,o.sku_counts,o.material_counts , s.storage_name , u.nickname from order_pick o left join storage s on s.id = o.storage_id left join usr u on u.id = o.create_by where o.order_number = ? ORDER BY o.create_date DESC]]></value>
+    </sql>
+    <sql name="SQl_GET_ORDER_PICK_ITEM">
+        <value><![CDATA[SELECT i.material_id,i.from_bills_no,i.ec_order_number,i.batch_number, i.counts, i.storage_location_id,m.material_name,m.material_no,m.barcode,m.unit_id ,u.unit_name ,s.location_name from order_pick_item i LEFT JOIN material m on m.id = i.material_id left JOIN material_unit u on m.unit_id = u.id LEFT JOIN storage_location s on s.id = i.storage_location_id where i.order_number = ?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_STATUS">
+        <value><![CDATA[UPDATE order_pick SET status=?,update_by=? WHERE order_number=?]]></value>
+    </sql>
+</sql-config>

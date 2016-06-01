@@ -1,0 +1,137 @@
+<sql-config namespace="INVENTORYRECEIPT">
+    <sql name="SQL_ADD_INVENTORYRECEIPT">
+        <value><![CDATA[INSERT INTO inventory_receipt(receipt_number, inbound_storage_id,summary, is_draft, total_price, gift_price,bills_date, create_date, auditor, audit_date, owner,create_by) VALUES(?,?,?,?,?,?,?,NOW(),?,NOW(),?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORYRECEIPT_BYPDA">
+        <value><![CDATA[INSERT INTO inventory_receipt(receipt_number, inbound_storage_id,summary, is_draft, total_price, gift_price,bills_date, create_date, auditor, audit_date, owner,create_by,consignee,status) VALUES(?,?,?,?,?,?,?,NOW(),?,NOW(),?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORYRECIPTITEM_BYPDA">
+        <value><![CDATA[
+        INSERT INTO inventory_receipt_item(material_id,receipt_number,receipt_counts,batch_number,production_date,expiration_date,row_number,from_bills_no,purchase_price,counts) values (?,?,?,?,?,?,?,?,?,?)
+        ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORYRECIPT_BYPDA">
+        <value><![CDATA[
+        UPDATE inventory_receipt
+            SET inbound_storage_id = ?,
+             summary = ?, 
+             is_draft = ?, 
+             total_price = ?,
+             gift_price = ?,
+             auditor = ?, 
+             audit_date = ?,
+             OWNER = ?,
+             consignee = ?,
+             status = ?
+        WHERE receipt_number =?
+        ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORYRECIPTITEM_BYPDA">
+        <value><![CDATA[
+        UPDATE inventory_receipt_item iri
+            SET 
+            iri.receipt_counts = ?,
+            iri.batch_number = ?,
+            iri.production_date = ?,
+            iri.expiration_date = ?,
+            iri.row_number=?
+        WHERE iri.id  =?
+        ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORYRECIPT">
+        <value><![CDATA[
+        UPDATE inventory_receipt
+            SET inbound_storage_id =?,
+             summary =?, 
+             is_draft =?, 
+             total_price =?,
+             gift_price =?,
+             auditor =?, 
+             audit_date =?,
+             OWNER =?
+        WHERE receipt_number =?
+        ]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORYRECEIPT">
+        <value><![CDATA[DELETE from inventory_receipt where receipt_number =?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORYRECEIPT">
+        <value><![CDATA[UPDATE inventory_receipt SET inbound_storage_id=?, summary=?, is_draft=?, total_price=?, gift_price=?, auditor=?, audit_date=?, owner=? WHERE receipt_number=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORYRECEIPT">
+        <value><![CDATA[SELECT i.receipt_number receiptNumber,i.from_bills_no fromBillsNo, i.inbound_storage_id inboundStorageId,i.summary, i.is_draft isDraft, i.total_price totalPrice, i.gift_price giftPrice, i.bills_date billsDate,i.create_date createDate,i.auditor, i.audit_date auditDate, i.owner,b.partner_name ownerName, i.create_by createBy ,i.consignee,i.status,s.storage_name storageName,u.user_name consigneeName FROM inventory_receipt i left join storage s on i.inbound_storage_id=s.id left join business_partner b on b.id = i.owner left join usr u on i.consignee = u.id WHERE i.receipt_number=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORYITEMRECEIPT">
+        <value><![CDATA[
+    SELECT
+    i.id id,
+    i.receipt_number receiptNumber,
+    i.row_number rowNumber,
+    i.from_bills_no fromBillsNo,
+    i.purchase_price purchasePrice,
+    i.material_id materialId,
+    i.batch_number batchNumber,
+    i.production_date productionDate,
+    i.expiration_date expirationDate,
+    i.counts,
+    i.receipt_counts receiptCounts,
+    i.purchase_price purchasePrice,
+    m.expiration_date total,
+    i.is_gift isGift,
+    i.remark,
+    i.create_date createDate,
+    i.create_by createBy,
+    i.status,
+    m.item_no itemNo,
+    m.barcode,
+    m.specifications_model specificationsModel,
+    m.brand,
+    m.season,
+    ma.type_name typeName,
+    m.material_name materialName,
+    m.material_no materialNo,
+    m.is_batch isBatch,
+    mat.unit_name unitName
+FROM
+    inventory_receipt_item i
+LEFT JOIN material m ON i.material_id = m.id
+LEFT JOIN material_type ma ON m.material_type = ma.id
+LEFT JOIN material_unit mat ON m.unit_id = mat.id
+WHERE
+    receipt_number = ?
+order by i.material_id,i.create_date]]></value>
+    </sql>
+    <sql name="SQL_INVENTORYRECIPTITEM_GET_BATCHNUMBER">
+        <value><![CDATA[select a.id, a.batch_number batchNumber from inventory_receipt_item a left join material b on a.material_id = b.id where b.barcode = ? and a.receipt_number = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_INVENTORYRECIPTITEM_STATUS_BY_ID_ONLY">
+        <value><![CDATA[SELECT i.status status,i.batch_number batchNumber,i.production_date productionDate from inventory_receipt_item i WHERE i.id=? ]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORYRECEIPTITEM">
+        <value><![CDATA[INSERT INTO inventory_receipt_item(receipt_number, material_id, batch_number, production_date, counts, purchase_price, total, is_gift, remark, create_date, create_by) VALUES(?,?,?,?,?,?,?,?,?,NOW(),?)]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORYRECEIPT_AND_INVENTORYRECEIPTITEM_BYRECEIPTNUMBER">
+        <value><![CDATA[delete inventory_receipt,inventory_receipt_item from inventory_receipt LEFT JOIN  inventory_receipt_item on inventory_receipt.receipt_number=inventory_receipt_item.receipt_number where  inventory_receipt.receipt_number=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORYRECEIPTITEM">
+        <value><![CDATA[DELETE FROM inventory_receipt_item WHERE receipt_number in (?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_STATUS">
+        <value><![CDATA[UPDATE inventory_receipt set update_by = ? ,update_date = now(), status = ? WHERE receipt_number = ?]]></value>
+    </sql>
+    <sql name="SQL_ITEM_IS_EXIST">
+        <value><![CDATA[SELECT count(*) from inventory_receipt_item item WHERE item.batch_number = ? and Date(item.production_date) = ? and item.row_number = ? and item.receipt_number = ? and item.status = 1]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_ITEM_RECEIPT_COUNTS">
+        <value><![CDATA[UPDATE inventory_receipt_item SET receipt_counts = receipt_counts + ? WHERE batch_number = ? and Date(production_date) = ? and row_number = ? and receipt_number = ? and status = 1 ]]></value>
+    </sql>
+    <sql name="SQL_DELETE_ITEM_BY_COMBINES">
+        <value><![CDATA[DELETE from inventory_receipt_item WHERE batch_number = ? and Date(production_date) = ? and row_number = ?  and receipt_number = ? and status = 0]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_ITEM_STATUS">
+        <value><![CDATA[UPDATE inventory_receipt_item SET status = 1 WHERE batch_number = ? and Date(production_date) = ? and row_number = ? and receipt_number = ? and status = 0 ]]></value>
+    </sql>
+    <sql name="SQL_ITEM_IS_USED">
+        <value><![CDATA[SELECT count(*) FROM inventory_receipt_item WHERE status=1 and from_bills_no=? ]]></value>
+    </sql>
+</sql-config>

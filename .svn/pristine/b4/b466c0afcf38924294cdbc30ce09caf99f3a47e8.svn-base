@@ -1,0 +1,23 @@
+<sql-config namespace="EC">
+    <sql name="SQL_ADD_SHOP">
+        <value><![CDATA[INSERT INTO shop(shop_no,shop_name,is_delete,create_date,contact,telephone,address)VALUES(?,?,FALSE,NOW(),?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_EDIT_SHOP">
+        <value><![CDATA[UPDATE shop SET shop_name=?,is_delete=0,update_date=NOW(),contact=?,telephone=?,address=? WHERE shop_no = ?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_SHOP">
+        <value><![CDATA[UPDATE shop SET is_delete = 1 WHERE shop_no = ?]]></value>
+    </sql>
+    <sql name="SQL_CHECK_MATERIAL_NO_EXIST">
+        <value><![CDATA[SELECT m.material_no productNo,m.material_name productName,m.barcode barcode,m.specifications_model specification,m.declare_unit declareUnit,m.legal_unit legalUnit,m.legal_translation_quantity legalQty,m.entry_unit entryUnit,m.entry_translation_quantity entryQty,m.ebec ebec,m.eben eben,m.hscode hscode,m.post_tax_number postTaxNo,m.item_no itemNo FROM material m WHERE m.material_no=?]]></value>
+    </sql>
+    <sql name="SQL_GET_ONHAND_BALANCE">
+        <value><![CDATA[SELECT SUM(i.inventory_amount) - MAX(i.promised_amount) num FROM material m LEFT JOIN inventory i ON m.id = i.material_id WHERE m.material_no=? AND i.storage_id != 0 ]]></value>
+    </sql>
+    <sql name="SQL_PROMISED_QUANTITY_SUB">
+        <value><![CDATA[UPDATE inventory SET promised_amount = promised_amount - ? WHERE material_id = (SELECT id FROM material m where m.material_no = ?)]]></value>
+    </sql>
+    <sql name="SQL_PROMISED_QUANTITY_ADD">
+        <value><![CDATA[UPDATE inventory SET promised_amount = promised_amount + ? WHERE material_id = (SELECT id FROM material m where m.material_no = ?)]]></value>
+    </sql>
+</sql-config>

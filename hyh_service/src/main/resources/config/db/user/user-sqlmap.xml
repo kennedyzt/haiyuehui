@@ -1,0 +1,26 @@
+<sql-config namespace="USERS">
+    <sql name="SQL_GET_USER_BY_USERNAME">
+        <value><![CDATA[SELECT u.id,u.user_name,u.nickname,u.email,u.object_id,u.pwd_hash,u.pwd_iterator,u.pwd_salt,u.last_login_date,u.`local`,u.user_type,u.user_account FROM usr u where u.is_delete=0 and u.user_name=?]]></value>
+    </sql>
+    <sql name="SQL_ADD_USER">
+        <value><![CDATA[INSERT INTO usr(user_name,nickname,email,is_delete, object_id,pwd_hash,pwd_iterator,pwd_salt,user_type,create_date,create_by,user_account)VALUES(?,?,?,?,?,?,?,?,?,NOW(),?,?)]]></value>
+    </sql>
+    <sql name="SQL_EDIT_USER">
+        <value><![CDATA[UPDATE usr set nickname = ?,email = ?,pwd_hash = ?,pwd_iterator = ?, pwd_salt=?,user_type = ?,update_date = NOW(),update_by = ?,user_account = ? where id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_USER_BY_ID">
+        <value><![CDATA[SELECT u.id,u.user_name,u.nickname,u.email,u.object_id,u.pwd_hash,u.pwd_iterator,u.pwd_salt,u.last_login_date ,u.`local`,u.user_type,u.user_account FROM usr u where u.is_delete=0 and u.id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_USER_RELATED">
+        <value><![CDATA[delete from user_group where user_id = ?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_USER">
+        <value><![CDATA[update usr set is_delete = 1 where id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_ALL_USER">
+        <value><![CDATA[SELECT u.id,u.user_name,u.nickname,u.email,u.object_id,u.pwd_hash,u.pwd_iterator,u.pwd_salt,u.last_login_date,u.`local`,u.user_account from usr u where u.is_delete=0 order by u.id desc]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_USER_LANGUAGE">
+        <value><![CDATA[UPDATE usr SET `local`=? where id=?]]></value>
+    </sql>
+</sql-config>

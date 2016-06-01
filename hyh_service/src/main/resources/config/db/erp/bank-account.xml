@@ -1,0 +1,17 @@
+<sql-config namespace="BANKACCOUNT">
+    <sql name="SQL_INSERT_BANKACCOUNT">
+        <value><![CDATA[INSERT INTO bank_account(partner_id,bank_name,bank_address,account_name,account_no,swift_code,remark,create_by,create_date,is_enable) VALUES(?,?,?,?,?,?,?,?,now(),true)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_BANKACCOUNT">
+        <value><![CDATA[UPDATE bank_account set partner_id=?,bank_name=?,bank_address=?,account_name=?,account_no=?,swift_code=?,remark=?,update_by=?,update_date=now() where id=?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BANKACCOUNT_BYID">
+        <value><![CDATA[SELECT id, partner_id partnerId,bank_name bankName,bank_address bankAddress,account_name accountName,account_no accountNo,swift_code swiftCode,remark from bank_account where id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_BANKACCOUNT">
+        <value><![CDATA[UPDATE bank_account set is_enable=false where id=?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BANKACCOUNT">
+        <value><![CDATA[SELECT id, partner_id partnerId,bank_name bankName,bank_address bankAddress,account_name accountName,account_no accountNo,swift_code swiftCode,remark from bank_account where partner_id=? and is_enable=true]]></value>
+    </sql>
+</sql-config>

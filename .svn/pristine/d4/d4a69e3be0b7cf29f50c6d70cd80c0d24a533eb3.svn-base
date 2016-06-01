@@ -1,0 +1,52 @@
+<#setting number_format=",###.##">
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>瑞乾科技 进销存管理</title>
+    <@css href="css/common.css" />
+    <@css href="css/main/user.css" />
+    <@css href="css/siping-widget.css" />
+
+    <script>
+        var rootPath = '<@url value="/"/>',
+            staticPath = '<@static />',
+            uploadPath = '<@fstatic />';
+    
+        function createUrl(path) {
+            return encodeURI(rootPath + path);
+        }
+        function uploadUrl(path){
+            return encodeURI(uploadPath + path);
+        }
+        function createMenuUrl(icon){
+            return encodeURI(staticPath + "/icons/"+icon+".png");
+        }
+    </script>
+    <@js src="js/jquery/jquery-1.10.2.js" />
+    <@js src="js/layer/layer.js" />
+    <@js src="js/siping/siping.js" />
+    <@js src="js/siping/siping-widget.js" />
+    <@js src="js/siping/main/main.js" />
+</head>
+<body style="width: 99.8%;background-color: #EEF3FA;">
+    <div class="smart_header">
+        <#include "../layout/constant/constant_header.ftl"/>
+    </div>
+    <div class="smart_main">
+        <div class="left_menus" id="left_menus">
+            <#include "../layout/constant/constant_menu.ftl"/>
+        </div>
+        <div class="right_main" id="right_main_page">
+            <div class="tab-control" id="tab-control"></div>
+            <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+                <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+            </object>
+            <@body />
+        </div>
+    </div>
+<script type="text/javascript">
+var mainTabControl = new sipingTab("tab-control");
+</script>
+</body>
+</html>

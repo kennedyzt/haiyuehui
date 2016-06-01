@@ -1,0 +1,5 @@
+jdbc.driver.name=com.mysql.jdbc.Driver
+jdbc.readdb.proxy.url=jdbc:mysql://211.149.204.10:3306/haiyuehui
+jdbc.writedb.proxy.url=jdbc:mysql://211.149.204.10:3306/haiyuehui
+jdbc.username=askmobile
+jdbc.password=askmobile

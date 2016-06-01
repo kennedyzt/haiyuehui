@@ -1,0 +1,7 @@
+<div class="tab simple">
+</div>
+<div class="tab-find hidden">
+    <form>
+        <input class="text" type="text">
+    </form>
+</div>

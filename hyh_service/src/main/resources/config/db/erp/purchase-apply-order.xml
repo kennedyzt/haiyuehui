@@ -1,0 +1,23 @@
+<sql-config namespace="PURCHASEAPPLYORDER">
+    <sql name="SQL_ADD_PURCHASEAPPLYORDER">
+        <value><![CDATA[INSERT INTO purchase_apply_order ( order_number, applier_id, summary, is_draft, bill_date, expire_date, last_date, create_date, create_by)VALUES (?,?,?,?,?,?,?,now(),?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_PURCHASEAPPLYORDERITEM">
+        <value><![CDATA[INSERT INTO purchase_apply_order_item ( order_number, material_id, last_date, counts, remark, create_date, create_by)VALUES (?,?,?,?,?, now(),?)]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASEAPPLYORDER">
+        <value><![CDATA[DELETE FROM purchase_apply_order WHERE order_number in (?) and is_draft = 1]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASEAPPLYORDERITEM">
+        <value><![CDATA[DELETE FROM purchase_apply_order_item WHERE order_number in (?)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASEAPPLYORDER_BYID">
+        <value><![CDATA[SELECT pao.order_number orderNumber, pao.bill_date billDate, pao.is_draft isDraft, pao.applier_id applierId, u.user_name applierName, pao.summary summary, pao.expire_date expireDate, last_date lastDate, pao.create_by ownerId, u2.user_name ownerName, pao.auditor auditorId, u3.user_name auditName FROM purchase_apply_order pao left join usr u on pao.applier_id = u.id LEFT JOIN usr u2 ON pao.create_by = u2.id LEFT JOIN usr u3 ON pao.auditor = u3.id WHERE order_number = ? ]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PURCHASEAPPLYORDERITEMS">
+        <value><![CDATA[SELECT item.order_number orderNumber, item.id id, item.material_id materialId, m.material_no materialNo, m.material_name materialName, m.description description, m.specifications_model specificationsModel, m.brand brand, m.season season, m.barcode barcode, m.unit_id unitId, u.unit_name unitName, item.counts counts, item.last_date lastDate, item.remark FROM  purchase_apply_order_item item left join material m ON item.material_id = m.id LEFT JOIN material_unit u ON m.unit_id = u.id WHERE item.order_number = ? ]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PURCHASEAPPLYORDER">
+        <value><![CDATA[UPDATE purchase_apply_order SET applier_id=?, summary=?, is_draft=?, bill_date=?, expire_date=?, last_date=?, auditor=?, audit_date=? where order_number=? ]]></value>
+    </sql>
+</sql-config>

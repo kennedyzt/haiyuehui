@@ -1,0 +1,5 @@
+jdbc.driver.name=com.mysql.jdbc.Driver
+jdbc.readdb.proxy.url=jdbc:mysql://192.168.10.101:3306/haiyuehui
+jdbc.writedb.proxy.url=jdbc:mysql://192.168.10.101:3306/haiyuehui
+jdbc.username=dev
+jdbc.password=dev

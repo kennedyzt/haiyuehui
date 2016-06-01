@@ -1,0 +1,26 @@
+.storage_text_div{
+    width: 50%;
+}
+.layer_sm_content{
+    text-align: center;
+    width: 100%;
+    height: 60%;
+    padding: 10px 0 0 0;
+}
+.layer_1_text{
+    width: 100%;
+    text-align: center;
+    height: 30px;
+    margin: 10px 0 10px 0;
+}
+.layer_1_text span{
+    
+}
+.layer_1_text select{
+    width: 180px;
+}
+.layer_sm_btn{
+    width: 100%;
+    text-align: center;
+    height: 30%;
+}

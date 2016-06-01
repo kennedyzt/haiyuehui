@@ -1,0 +1,23 @@
+.partner_text_div{
+    width: 30%;
+    float: left;
+}
+#partner_section_2{
+    display: none;
+}
+#partner_title_1{
+    border-bottom: 2px solid #60A7FF;
+}
+.bank_text_div{
+    width: 49%;
+    float: left;
+}
+.data_grid_for_layzer{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 240px;
+}
+.openWinGetPartner{
+    width:90%;
+    margin: 0 auto;
+}

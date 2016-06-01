@@ -1,0 +1,63 @@
+<sql-config namespace="INVENTORY">
+    <sql name="SQL_GET_INVENTORY_SHIPMENTS">
+        <value><![CDATA[
+        SELECT
+    S.shipments_number,
+    S.outbound_storage_id outbound_storage,
+    t.storage_name,
+    S.summary,
+    S.is_draft,
+    S.total_price,
+    S.gift_price,
+    S.bills_date,
+    S.create_date,
+    S.create_by,
+    S.auditor,
+    S.audit_date,
+    S. OWNER,
+    u.nickname ownerName
+FROM
+    inventory_shipments AS S
+LEFT JOIN STORAGE AS t ON S.outbound_storage_id = t.id
+left join usr u on s.owner = u.id
+WHERE
+    S.shipments_number =?
+        ]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY_SHIPMENTS_ITEM">
+        <value><![CDATA[SELECT I.id,I.shipments_number,I.material_id,M.material_no,M.material_name materialName,M.description,M.specifications_model,M.brand,M.season,M.barcode,u.unit_name,I.batch_number,I.production_date,I.counts,I.purchase_price,I.sell_price,I.total,I.is_gift,I.remark,I.create_date,I.create_by FROM inventory_shipments_item AS I LEFT JOIN material M ON I.material_id=M.id LEFT JOIN material_unit u ON m.unit_id=u.id WHERE I.shipments_number=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORY_SHIPMENTS">
+        <value><![CDATA[DELETE FROM inventory_shipments WHERE shipments_number in (?) and is_draft=TRUE]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORY_SHIPMENTS_ITEM">
+        <value><![CDATA[DELETE FROM inventory_shipments_item WHERE shipments_number in (?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORY_SHIPMENTS">
+        <value><![CDATA[INSERT INTO inventory_shipments(shipments_number,outbound_storage_id,summary,is_draft,total_price,gift_price,bills_date,create_date,create_by,auditor,audit_date,owner)VALUES(?,?,?,?,?,?,?,now(),?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORY_SHIPMENTS_ITEMS">
+        <value><![CDATA[INSERT INTO inventory_shipments_item(shipments_number,material_id,batch_number,production_date,counts,purchase_price,sell_price,total,is_gift,remark,create_date,create_by)VALUES(?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORY_SHIPMENTS">
+        <value><![CDATA[UPDATE inventory_shipments SET outbound_storage_id=?,summary=?,is_draft=?,total_price=?,gift_price=?,bills_date=?,auditor=?,audit_date=?,owner=? where shipments_number=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY">
+        <value><![CDATA[SELECT i.id,i.material_id,m.material_name,i.storage_id,s.storage_name,i.inbound_amount,i.available_amount,i.create_date,i.create_by,i.update_date,i.update_by from inventory AS i LEFT JOIN material AS m ON i.material_id=m.id LEFT JOIN storage AS s ON i.storage_id=s.id WHERE i.id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY_LOG_ITEMS">
+        <value><![CDATA[SELECT id,inventory_id,is_inbound,from_bills_id,batch_number,production_date,counts,purchase_price,sell_price,total,create_date,create_by from inventory_log where inventory_id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY_LOGS">
+        <value><![CDATA[SELECT I.id,I.material_id,I.storage_id,A.inventory_id ,A.is_inbound,A.from_bills_id,A.batch_number,A.production_date,A.counts,A.purchase_price,A.sell_price,A.total,A.create_date,A.create_by FROM inventory_log A LEFT JOIN inventory I ON A.inventory_id = I.id WHERE I.material_id = ? AND I.storage_id = ?]]></value>
+    </sql>
+    <sql name="SQL_FIND_INVENTORY_NUMBER_WITH_MATERIALID_AND_STORAGEID">
+        <value><![CDATA[SELECT sum(inventory_amount) FROM inventory A  WHERE material_id = ? AND storage_id = ? group by storage_id]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY_WARNING">
+        <value><![CDATA[SELECT w.max_inventory from inventory_warning w WHERE w.material_id=? and w.storage_id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORY_AMOUNT_BY_MATERIALID">
+        <value><![CDATA[SELECT i.inventory_amount -i.promised_amount-i.ordered_amount inventory_amount,i.material_id,m.material_name FROM inventory i left join material m on m.id = i.material_id WHERE i.material_id=? and i.storage_id =? ]]></value>
+    </sql>
+</sql-config>

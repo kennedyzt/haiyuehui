@@ -1,0 +1,17 @@
+jdbc.driver.name=com.mysql.jdbc.Driver
+jdbc.readdb.proxy.url=jdbc:mysql://192.168.10.101:3306/haiyuehui
+jdbc.writedb.proxy.url=jdbc:mysql://192.168.10.101:3306/haiyuehui
+jdbc.username=dev
+jdbc.password=dev
+
+#jdbc.driver.name=com.mysql.jdbc.Driver
+#jdbc.readdb.proxy.url=jdbc:mysql://211.149.204.10:3306/haiyuehui
+#jdbc.writedb.proxy.url=jdbc:mysql://211.149.204.10:3306/haiyuehui
+#jdbc.username=askmobile
+#jdbc.password=askmobile
+
+#jdbc.driver.name=com.mysql.jdbc.Driver
+#jdbc.readdb.proxy.url=jdbc:mysql://127.0.0.1:3306/haiyuehui
+#jdbc.writedb.proxy.url=jdbc:mysql://127.0.0.1:3306/haiyuehui
+#jdbc.username=root
+#jdbc.password=123456

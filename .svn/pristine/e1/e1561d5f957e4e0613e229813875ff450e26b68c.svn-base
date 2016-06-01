@@ -1,0 +1,23 @@
+#common
+siping.i18n.id=ID
+siping.i18n.username=\u7528\u6237\u540d
+siping.i18n.add_error=\u65B0\u589E\u5931\u8D25 {0}
+siping.i18n.add_error_no_param=\u65B0\u589E\u5931\u8D25
+siping.i18n.add_success=\u65B0\u589E\u6210\u529F
+siping.i18n.edit_success=\u4FEE\u6539\u6210\u529F
+siping.i18n.edit_error=\u4FEE\u6539\u5931\u8D25 {0}
+siping.i18n.edit_error_no_param=\u4FEE\u6539\u5931\u8D25
+siping.i18n.delete_success=\u5220\u9664\u6210\u529F
+siping.i18n.delete_error=\u5220\u9664\u5931\u8D25 {0}
+siping.i18n.delete_error_no_param=\u5220\u9664\u5931\u8D25
+siping.i18n.login_success=\u767B\u5F55\u6210\u529F
+siping.i18n.login_error=\u767B\u5F55\u5931\u8D25 {0}
+siping.i18n.login_error_no_param=\u767B\u5F55\u5931\u8D25
+siping.i18n.reset_success=\u91CD\u7F6E\u6210\u529F
+siping.i18n.reset_error=\u91CD\u7F6E\u5931\u8D25 {0}
+siping.i18n.reset_error_no_param=\u91CD\u7F6E\u5931\u8D25
+siping.i18n.query_success=\u67E5\u8BE2\u6210\u529F
+siping.i18n.query_error=\u67E5\u8BE2\u5931\u8D25 {0}
+siping.i18n.query_error_no_param=\u67E5\u8BE2\u5931\u8D25
+siping.i18n.submit_duplicate=\u8BF7\u4E0D\u8981\u91CD\u590D\u63D0\u4EA4\u8868\u5355
+siping.i18n.pack_success=\u5305\u88c5\u6210\u529f

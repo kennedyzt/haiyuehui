@@ -1,0 +1,17 @@
+<sql-config namespace="PARTNERTYPE">
+    <sql name="SQL_INSERT_PARTNERTYPE">
+        <value><![CDATA[INSERT INTO partner_type(type_name,description,is_delete,create_date,create_by) values(?,?,false,now(),?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PARTNERTYPE">
+        <value><![CDATA[UPDATE partner_type set type_name=?,description=?,update_date=now(),update_by=? where id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PARTNERTYPE">
+        <value><![CDATA[UPDATE partner_type set is_delete=true,update_date=now(),update_by=? where id=?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PARTNERTYPE">
+        <value><![CDATA[SELECT id id,type_name typeName,description description,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_type where is_delete=false]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BYTYPENAME">
+        <value><![CDATA[SELECT count(*) from partner_type where type_name=?]]></value>
+    </sql>
+</sql-config>

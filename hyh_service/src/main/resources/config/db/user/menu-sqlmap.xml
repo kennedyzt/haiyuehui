@@ -1,0 +1,53 @@
+<sql-config namespace="MENU">
+    <sql name="SQL_INSERT_MENU_TREE">
+        <value>
+            <![CDATA[INSERT INTO menu_tree(tree_name,description,is_delete,create_date,create_by)VALUES(?,?,?,NOW(),?)]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_MENU_TREE">
+        <value>
+            <![CDATA[DELETE from  menu_tree where id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_MENU_TREE_BY_ID">
+        <value><![CDATA[SELECT id,tree_name,description,is_delete,create_date,create_by,update_date,update_by FROM menu_tree where id = ?]]></value>
+    </sql>
+    <sql name="SQL_GET_MENU_TREE_LIST">
+        <value>
+            <![CDATA[SELECT id,tree_name,description,is_delete,create_date,create_by,update_date,update_by FROM menu_tree where is_delete=FALSE]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_MENU_TREE">
+        <value>
+            <![CDATA[update menu_tree set tree_name = ?,description = ?,is_delete = ?,update_date = now(),update_by = ? where id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_INSERT_MENU_NODE">
+        <value>
+            <![CDATA[INSERT INTO menu_node(node_name,`sequence`,description,parent_id,`level`,is_root, node_url,menu_root,icon,is_delete,create_date,create_by,user_account)VALUES(?,?,?,?,?,?,?,?,?,?,NOW(),?,?)]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_MENU_NODE">
+        <value><![CDATA[delete from menu_node where id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_MENU_NODE_RELATED">
+        <value><![CDATA[delete from permission  where node_id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_MENU_NODE_BY_ID">
+        <value>
+            <![CDATA[SELECT m.id,m.node_name,m.`sequence`,m.description,m.parent_id,m.`level`,m.is_root, m.node_url,m.menu_root,m.icon,m.is_delete,m.create_date,m.create_by,m.update_date,m.update_by,m.user_account, mp.node_name parent_name FROM menu_node m left join menu_node mp on m.parent_id = mp.id where m.id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_MENU_NODE">
+        <value>
+            <![CDATA[update menu_node set node_name = ?,`sequence` = ?,description = ?,parent_id = ?,`level` = ?,is_root = ?,node_url = ?,menu_root = ?,icon = ?,is_delete = ?,update_date = now(),update_by = ?,user_account = ? where id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_MENU_NODE_BY_GROUP_ID">
+        <value>
+            <![CDATA[SELECT mn.id id,mn.node_name node_name,mn.`sequence` sequence,mn.description description,mn.parent_id parent_id,mn.menu_tree_id menu_tree_id,mn.`level` level,mn.is_root is_root, mn.node_url node_url,mn.is_delete is_delete,mn.create_date create_date,mn.create_by create_by,mn.update_date update_date,mn.update_by update_by FROM permission p left join menu_node mnon p.node_id = mn.id where p.group_id = ?]]>
+        </value>
+    </sql>
+</sql-config>

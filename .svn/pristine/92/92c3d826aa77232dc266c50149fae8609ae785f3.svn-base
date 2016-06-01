@@ -1,0 +1,133 @@
+<sql-config namespace="INVENTORYALLOCATE">
+    <sql name="SQL_ADD_INVENTORYALLOCATE">
+        <value><![CDATA[INSERT INTO inventory_allocate (allocate_number,bills_date,material_id,material_no,batch_number,production_date,expiration_date,from_location_id,from_location_no,from_storage_id,to_location_id,to_location_no,to_storage_id,counts,create_date,create_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)]]></value>
+    </sql>
+    <sql name="SQL_GET_INVENTORYALLOCATE">
+        <value><![CDATA[select i.allocate_number,i.bills_date,i.material_id,i.barcode,i.material_name,i.specificationsModel,i.unit_id,i.batch_number,i.production_date,i.expiration_date,i.from_location_id,i.to_location_id,i.counts,i.create_by from inventory_allocate i where i.allocate_number =  ?]]></value>
+    </sql>
+    <sql name="SQL_GET_MATERIALBATCHS_BY_STORAGE_LOCATION">
+        <value><![CDATA[SELECT
+    mbcopy.batch_number batchNumber,
+    mbcopy.production_date productionDate,
+    mbcopy.expiration_date expirationDate,
+    SUM(CONVERT (CONCAT(IF (il.is_inbound, '+', '-'),il.counts),DECIMAL)) counts,
+    mbcopy.material_id materialId,
+    mat.barcode barcode,
+    mat.material_name materialName,
+    mat.brand brand,
+    mat.material_no materialNo,
+    inv.storage_location_id storageLocationId,
+    sl.location_name locationName,
+    sl.location_no locationNo
+FROM
+    inventory_log il
+LEFT JOIN material_batch mbcopy ON il.batch_uuid = mbcopy.uuid
+LEFT JOIN inventory inv ON il.inventory_id = inv.id
+LEFT JOIN material mat ON mbcopy.material_id = mat.id
+LEFT JOIN storage_location sl ON inv.storage_location_id = sl.id
+WHERE
+    il.batch_uuid IN (
+        SELECT
+            mb2.uuid
+        FROM
+            material_batch mb2
+        WHERE
+            mb2.batch_number IN (
+                SELECT
+                    mb.batch_number
+                FROM
+                    material_batch mb
+                GROUP BY
+                    mb.batch_number,mb.material_id,mb.production_date
+                HAVING
+                    SUM(CONVERT (CONCAT(IF (mb.is_inbound, '+', '-'),mb.counts),DECIMAL)) != 0
+            )
+    )
+AND (inv.storage_location_id = ? or sl.location_no=? )
+AND inv.inventory_amount != 0
+GROUP BY
+    mbcopy.batch_number,mbcopy.material_id,mbcopy.production_date]]></value>
+    </sql>
+      <sql name="SQL_GET_STORAGELOCATION_WITH_MATERIALBATCH_BY_MATERIAL">
+        <value><![CDATA[
+        SELECT
+    inventory_id,
+    SUM(
+        CONVERT (
+            CONCAT(
+
+                IF (il.is_inbound, '+', '-'),
+                il.counts
+            ),
+            DECIMAL
+        )
+    ) counts,
+    mat.id materialId,
+    mat.material_name materialName,
+    mat.material_no materialNo,
+    mat.barcode barcode,
+    mat.brand brand,
+    sl.id storageLocationId,
+    sl.location_name locationName,
+    sl.location_no locationNo,
+    sl.storage_id storageId,
+    mb3.batch_number batchNumber,
+    mb3.production_date productionDate,
+    AVG(
+        CONVERT (
+            CONCAT(
+
+                IF (mb3.is_inbound, '+', '0*'),
+                mb3.price
+            ),
+            DECIMAL
+        )
+    ) price,
+    mb3.expiration_date expirationDate
+FROM
+    inventory_log il
+LEFT JOIN inventory inv ON il.inventory_id = inv.id
+LEFT JOIN storage_location sl ON inv.storage_location_id = sl.id
+LEFT JOIN material mat ON inv.material_id = mat.id
+LEFT JOIN material_batch mb3 ON il.batch_uuid = mb3.uuid
+WHERE
+    il.batch_uuid IN (
+        SELECT
+            mb2.uuid
+        FROM
+            material_batch mb2
+        LEFT JOIN material m ON mb2.material_id = m.id
+        WHERE
+            mb2.batch_number IN (
+                SELECT
+                    mb.batch_number
+                FROM
+                    material_batch mb
+                GROUP BY
+                    mb.batch_number,
+                    mb.material_id,
+                    mb.production_date
+                HAVING
+                    SUM(
+                        CONVERT (
+                            CONCAT(
+
+                                IF (mb.is_inbound, '+', '-'),
+                                mb.counts
+                            ),
+                            DECIMAL
+                        )
+                    ) != 0
+            )
+        AND (mb2.material_id = ? OR m.material_no =? )
+    )
+GROUP BY
+    inventory_id,
+    mb3.batch_number,
+    mb3.material_id,
+    mb3.production_date
+ORDER BY
+    mb3.production_date
+        ]]></value>
+    </sql>
+</sql-config>

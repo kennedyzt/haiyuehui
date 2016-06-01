@@ -1,0 +1,35 @@
+<sql-config namespace="PERMISSION">
+	<sql name="SQL_INSERT_PERMISSION">
+		<value><![CDATA[INSERT INTO permission(group_id,node_id,is_add,is_edit,is_delete,is_print,create_date,create_by) values(?,?,?,?,?,?,now(),?)]]></value>
+	</sql>
+	<sql name="SQL_GET_PERMISSION_BY_GROUPID">
+		<value><![CDATA[SELECT n.id,n.node_name,n.sequence,n.description,n.parent_id,n.menu_tree_id,n.level,n.is_root,n.node_url,p.is_add,p.is_edit,p.is_delete,p.is_print from permission p LEFT JOIN menu_node n ON p.node_id=n.id where n.is_delete=FALSE AND p.group_id=? ORDER BY n.level]]></value>
+	</sql>
+	<sql name="SQL_DELETE_PERMISSION">
+		<value><![CDATA[DELETE from permission WHERE node_id=? and group_id=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_PERMISSION_BY_GROUPID">
+		<value><![CDATA[DELETE from permission WHERE group_id=?]]></value>
+	</sql>
+	<sql name="SQL_GET_USER_BY_GROUPID">
+		<value><![CDATA[SELECT u.user_id userId from user_group u WHERE u.group_id=?]]></value>
+	</sql>
+	<sql name="SQL_INSERT_USER_RERMISSION">
+		<value><![CDATA[INSERT INTO user_permission(user_id,permission_id,is_add,is_edit,is_delete,is_print,create_date,create_by) VALUES(?,?,?,?,?,?,now(),?)]]></value>
+	</sql>
+	<sql name="SQL_DELETE_USER_RERMISSION">
+		<value><![CDATA[DELETE FROM user_permission WHERE user_id=? ]]></value>
+	</sql>
+	<sql name="SQL_GET_USER_PERMISSION_IS_EXIST">
+		<value><![CDATA[SELECT COUNT(1) from user_permission where user_id=?]]></value>
+	</sql>
+	<sql name="SQL_UPDATE_USER_HAS_PERMISSION">
+		<value><![CDATA[UPDATE usr SET has_permission=? where id=?]]></value>
+	</sql>
+	<sql name="SQL_GET_USER_PERMISSION_BY_USERID">
+		<value><![CDATA[SELECT n.id,n.node_name,n.sequence,n.description,n.parent_id,n.menu_tree_id,n.level,n.is_root,n.node_url,p.is_add,p.is_edit,p.is_delete,p.is_print from user_permission p LEFT JOIN permission ps ON p.permission_id=ps.id LEFT JOIN menu_node n ON ps.node_id=n.id where n.is_delete=FALSE AND p.user_id=? ORDER BY n.level]]></value>
+	</sql>
+    <sql name="SQL_SELECT_BUTTONPERMISSION">
+        <value><![CDATA[SELECT b.group_name groupName,a.user_id userId,d.node_name menuName,d.level menuLevel,d.node_url menuUrl,c.is_add addBtn,c.is_delete delByn,c.is_edit editbtn,c.is_print printbtn FROM user_group a left join groups b on a.group_id = b.id left join permission c on a.group_id = c.group_id left join menu_node d on c.node_id = d.id WHERE a.user_id = ? and d.node_url = ?]]></value>
+    </sql>
+</sql-config>

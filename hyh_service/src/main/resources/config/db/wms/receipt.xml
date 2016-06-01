@@ -1,0 +1,8 @@
+<sql-config namespace="RECEIPT">
+    <sql name="SQL_ADD_PURCHASERECEIPT">
+        <value><![CDATA[INSERT INTO purchase_receipt ( receipt_number,from_bills_no, partner_id, bill_date, inbound_storage_id, summary, is_draft, total_price, gift_price, favorable_price, pay_price, create_date, create_by, owner)VALUES (?,?,?,?,?,?,?,?,?,?,?,now(),?,?)]]></value>
+    </sql>
+    <sql name="SQL_GET_ROW_NUMBER">
+        <value><![CDATA[SELECT row_number rowNumber from inventory_receipt_item where batch_number = ? AND material_id= ? ]]></value>
+    </sql>
+</sql-config>

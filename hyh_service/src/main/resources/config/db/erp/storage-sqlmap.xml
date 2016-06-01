@@ -1,0 +1,406 @@
+<sql-config namespace="STORAGE">
+    <sql name="SQL_INSERT_STORAGE">
+        <value>
+            <![CDATA[
+                INSERT INTO storage(
+                    storage_no,
+                    storage_name,
+                    is_enable_location,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    NOW(),
+                    ?
+                )
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_STORAGE_LOCATION">
+        <value>
+            <![CDATA[
+                update storage_location set
+                location_no = ?,
+                location_name = ?,
+                location_barcode = ?,
+                description = ?,
+                update_by = ?,
+                update_date = now(),
+                storage_area_id = ?,
+                pick_order = ?
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_STORAGE_AREA">
+        <value>
+            <![CDATA[
+                update storage_area set
+                area_no = ?,
+                area_name = ?,
+                remark = ?,
+                update_by = ?,
+                update_date = now()
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_INSERT_STORAGE_LOCATION">
+        <value>
+            <![CDATA[
+                INSERT INTO storage_location(
+                    location_no,
+                    location_name,
+                    location_barcode,
+                    description,
+                    storage_id,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    storage_area_id,
+                    pick_order
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    false,
+                    NOW(),
+                    ?,
+                    ?,
+                    ?
+                )
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_INSERT_STORAGE_AREA">
+        <value>
+            <![CDATA[
+                INSERT INTO storage_area(
+                    storage_id,
+                    area_no,
+                    area_name,
+                    remark,
+                    is_delete,
+                    create_date,
+                    create_by
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    false,
+                    NOW(),
+                    ?
+                )
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_STORAGE">
+        <value>
+            <![CDATA[
+                update storage set update_by = ?,update_date = now(),is_delete= true  where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_STORAGE_LOCATION">
+        <value>
+            <![CDATA[
+                update storage_location set update_by = ?,update_date = now(),is_delete= true  where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_STORAGE_AREA">
+        <value>
+            <![CDATA[
+                update storage_area set update_by = ?,update_date = now(),is_delete= true  where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_BY_ID">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by,
+                    is_enable_location
+                FROM storage
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGEFLAG_BY_ID">
+        <value>
+            <![CDATA[
+                SELECT check_storage_used(?)
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_ALL_STORAGE">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by,
+                    is_enable_location
+                FROM storage
+                where is_delete = false
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_LOCATION_BY_STORAGEID">
+        <value>
+            <![CDATA[
+                    SELECT s.id,
+                    s.location_no,
+                    s.location_name,
+                    s.location_barcode,
+                    s.description,
+                    s.storage_id,
+                    s.storage_area_id,
+                    A.area_name storageAreaName,
+                    A.area_no storageAreaNo,
+                    s.is_delete,
+                    s.create_date,
+                    s.create_by,
+                    s.update_date,
+                    s.update_by,
+                    s.pick_order
+                FROM storage_location s left join storage_area A on s.storage_area_id = A.id
+                where s.is_delete = false and s.storage_id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_AREA_BY_STORAGEID">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    area_name,
+                    area_no,
+                    remark,
+                    storage_id,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage_area
+                where is_delete = false and storage_id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_BY_STORAGENAME">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage
+                where storage_name = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_BY_STORAGENO">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage
+                where storage_no = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_AREA_USED_INFO">
+        <value>
+            <![CDATA[
+                SELECT check_storage_area_used(?)
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_FIND_STORAGE_AREA_NUMBER_BY_AREANO">
+        <value>
+            <![CDATA[
+                SELECT count(*)
+                FROM storage_area
+                where area_no = ? and is_delete = false
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_STORAGE">
+        <value>
+            <![CDATA[
+                update storage
+                set storage_no = ?,
+                    storage_name = ?,
+                    description = ?,
+                    is_delete = ?,
+                    update_date = now(),
+                    update_by = ?
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_BYKEY">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage
+                where is_delete = false
+                and (storage_no like CONCAT_WS('%',?,'%')
+                or storage_name like CONCAT_WS('%',?,'%'))
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_LOCATION_BY_LOCATIONID">
+        <value>
+            <![CDATA[
+                SELECT s.id,
+                    s.location_no,
+                    s.location_name,
+                    s.location_barcode,
+                    s.description,
+                    s.storage_id,
+                    st.storage_name storageName,
+                    st.storage_no storageNo,
+                    s.storage_area_id,
+                    A.area_name storageAreaName,
+                    A.area_no storageAreaNo,
+                    s.is_delete,
+                    s.create_date,
+                    s.create_by,
+                    s.update_date,
+                    s.update_by,
+                    s.pick_order
+                FROM storage_location s left join storage_area A on s.storage_area_id = A.id left join storage st on s.storage_id = st.id
+                where s.id = ?
+            ]]>
+        </value>
+    </sql>
+     <sql name="SQL_GET_STORAGE_LOCATION_BY_LOCATIONNO">
+        <value>
+            <![CDATA[
+                SELECT s.id,
+                    s.location_no,
+                    s.location_name,
+                    s.location_barcode,
+                    s.description,
+                    s.storage_id,
+                    s.storage_area_id,
+                    A.area_name storageAreaName,
+                    A.area_no storageAreaNo,
+                    s.is_delete,
+                    s.create_date,
+                    s.create_by,
+                    s.update_date,
+                    s.update_by,
+                    s.pick_order
+                FROM storage_location s left join storage_area A on s.storage_area_id = A.id
+                where s.location_no = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_AREA_BY_AREAID">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    area_no,
+                    area_name,
+                    remark,
+                    storage_id,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage_area
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_FIND_STORAGE_LOCATION_NUMBER_BY_LOCATIONNO">
+        <value>
+            <![CDATA[
+                SELECT count(*)
+                FROM storage_location
+                where location_no = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_STORAGE_BY_ISLOCATION">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    storage_no,
+                    storage_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by
+                FROM storage
+                where is_delete = false
+                and is_enable_location = ?
+            ]]>
+        </value>
+    </sql>
+     <sql name="SQL_GET_STORAGE_LOCATION_ID_BY_STORAGE_AREA_ID">
+        <value>
+            <![CDATA[
+                SELECT id storageLocationId
+                FROM storage_location
+                where is_delete = false
+                and storage_area_id = ?
+            ]]>
+        </value>
+    </sql>
+         <sql name="SQL_GET_STORAGE_LOCATION_ID_BY_STORAGE_ID">
+        <value>
+            <![CDATA[
+                SELECT id storageLocationId
+                FROM storage_location
+                where is_delete = false
+                and storage_id = ?
+            ]]>
+        </value>
+    </sql>
+</sql-config>

@@ -1,0 +1,20 @@
+<sql-config namespace="READYRECEIPT">
+    <sql name="SQL_SELECT_READYRECEIPTITEMS">
+        <value><![CDATA[SELECT item.order_number orderNumber, item.id id, item.material_id materialId,item.ready_status readyStatus, m.material_no materialNo, m.material_name materialName, m.description description, m.specifications_model specificationsModel, m.brand brand, m.season season, m.barcode barcode, m.unit_id unitId,m.expiration_date expirationDate,m.is_batch isBatch, u.unit_name unitName, item.counts counts, item.purchase_price purchasePrice, item.discount_rate discountRate,item.after_discount afterDiscount, item.tax_rate taxRate, item.tax, item.total amount, item.is_gift isGift, item.receipt_counts receiptCounts, item.remark ,item.row_number rowNumber FROM purchase_order_item item left join material m ON item.material_id = m.id LEFT JOIN material_unit u ON m.unit_id = u.id WHERE item.order_number = ? ]]></value>
+    </sql>
+    <sql name="SQL_SELECT_READYRECEIPT_BYID">
+        <value><![CDATA[SELECT po.order_number orderNumber,po.owner, po.partner_id partnerId,po.ready_status readyStatus, bp.partner_code partnerCode, bp.partner_name partnerName, bp.contacts_first_name contactsFirstName, bp.contacts_last_name contactsLastName, bp.mobilephone mobilePhone, po.bill_date billDate, po.receipt_date receiptDate, po.inbound_storage_id inBoundStorage, s.storage_name inBoundStorageName, po.summary summary, po.total_price totalAmount, po.gift_price giftAmount, po.favorable_price discountAmount, po.pay_price payAmount, po.create_date createDate, po.create_by createBy, po.is_draft isDraft, u.user_name createByName, po.audit_date auditDate, po.auditor auditBy, po.status, u2.user_name auditByName,u3.user_name ownerName FROM purchase_order po LEFT JOIN business_partner bp ON po.partner_id = bp.id LEFT JOIN `storage` s ON s.id = po.inbound_storage_id left join usr u on u.id = po.create_by left join usr u2 on u2.id = po.create_by left join usr u3 on po.owner=u3.id WHERE order_number = ?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_READYRECEIPT_ITEM_STATUS">
+        <value><![CDATA[UPDATE purchase_order_item set ready_status = 1 WHERE row_number = ? AND order_number =?]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORY_RECEIPT">
+        <value><![CDATA[INSERT INTO inventory_receipt(receipt_number,from_bills_no,bills_date,create_date,is_draft,create_by,consignee,inbound_storage_id,start_station,end_station,transportation_type) VALUES(?,?,NOW(),NOW(),false,?,?,?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORY_RECEIPT_ITEM">
+        <value><![CDATA[INSERT INTO inventory_receipt_item(receipt_number,material_id,counts,create_date,from_bills_no,row_number) VALUES(?,?,?,NOW(),?,?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_READY_RECEIPT_STATUS">
+        <value><![CDATA[UPDATE purchase_order set ready_status = ?  where order_number = ?]]></value>
+    </sql>
+</sql-config>

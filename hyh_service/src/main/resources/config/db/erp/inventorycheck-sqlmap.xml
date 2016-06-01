@@ -1,0 +1,61 @@
+<sql-config namespace="INVENTORYCHECK">
+    <sql name="SQL_GET_ALL_INVENTORYCHECK">
+        <value><![CDATA[SELECT c.check_number,c.check_storage,c.summary,c.is_draft,c.is_loss,c.total_price,c.gift_price,c.create_date,c.create_by,c.auditor,c.aodit_date,c.owner from inventory_check c]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORYCHECK">
+        <value><![CDATA[INSERT INTO inventory_check (check_number,check_storage,summary,is_draft,is_loss,total_price,create_date,create_by,auditor,audit_date,owner,bills_date,total_number) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_FIND_BATCH_NUMBER_WITH_MATERIALID_AND_STORAGEID">
+        <value><![CDATA[SELECT
+    batch.material_id materialId,
+    m.material_no materialNo,
+m.material_name materialName,
+m.barcode,
+m.specifications_model specificationsModel,
+unit.unit_name unitName,
+i.id inventoryId,
+batch.batch_number batchNumber,
+batch.production_date productionDate,
+batch.expiration_date expirationDate,
+SUM(IF(batch.is_inbound,+batch.counts,-batch.counts)) counts
+FROM
+    material_batch batch
+LEFT JOIN inventory_log log ON batch.uuid = log.batch_uuid
+LEFT JOIN inventory i ON i.id = log.inventory_id
+LEFT JOIN material m ON m.id = batch.material_id
+LEFT JOIN material_unit unit on unit.id = m.unit_id
+WHERE
+    batch.material_id = ?
+AND i.storage_id = ?
+GROUP BY
+    batch.batch_number,
+    batch.production_date
+ORDER BY
+    batch.production_date
+    ]]></value>
+    </sql>
+    <!--  <sql name="SQL_DELETE_INVENTORYCHECK">
+        <value><![CDATA[delete inventory_check ,inventory_check_item from  inventory_check LEFT JOIN  inventory_check_item on inventory_check.check_number = inventory_check_item.check_number WHERE inventory_check.check_number = ?]]></value>
+    </sql>-->
+    <sql name="SQL_DELETE_INVENTORYCHECK">
+        <value><![CDATA[update inventory_check set is_delete = 1 where check_number = ?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_INVENTORYCHECK">
+        <value><![CDATA[update inventory_check set bills_edit_date = ?,status = ?,summary = ? where check_number = ?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_INVENTORYCHECKITEM">
+        <value><![CDATA[delete from inventory_check_item  WHERE check_number = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_INVENTORYCHECK_BY_ID_MAX">
+        <value><![CDATA[select id from inventory_check where id=(select max(id) from inventory_check)]]></value>
+    </sql>
+    <sql name="SQL_ADD_INVENTORYCHECKITEMS">
+        <value><![CDATA[INSERT INTO inventory_check_item (check_number,material_id,batch_number,production_date,counts,price,total,is_gift,remark,available_amount,actual_amount,create_by,create_date) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,now())]]></value>
+    </sql>
+     <sql name="SQL_ADD_INVENTORYCHECK_NEW">
+        <value><![CDATA[insert into inventory_check(check_number,storage_id,storage_area_id,operator_id,bills_date,summary,owner,status,bills_edit_date,is_delete,pc_pda_flag)VALUES(?,?,?,?,?,?,?,?,?,?,?)]]></value>
+    </sql>
+     <sql name="SQL_ADD_INVENTORYCHECKITEMS_NEW">
+        <value><![CDATA[INSERT INTO inventory_check_item (check_number,material_id,material_no,material_name,barcode,material_type_name,unit_name,location_no,batch_number,production_date,expiration_date,inventory_number,actual_number,diff_number) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+    </sql>
+</sql-config>

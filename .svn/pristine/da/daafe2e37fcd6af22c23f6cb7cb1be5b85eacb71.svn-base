@@ -1,0 +1,17 @@
+<sql-config namespace="POSTPERIOD">
+    <sql name="SQL_ADD_POSTPERIOD">
+        <value><![CDATA[INSERT INTO post_period(post_period_no,post_period_name,post_period_flag,post_period_start_time,post_period_end_time,description)VALUES(?,?,?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_POSTPERIOD_BYID">
+        <value><![CDATA[select id,post_period_no,post_period_name,post_period_flag,post_period_start_time,post_period_end_time,description from post_period where is_delete=false and id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_POSTPERIOD">
+        <value><![CDATA[update post_period set update_by = ?,is_delete = 1 where id = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_POSTPERIOD_BY_ID_MAX">
+        <value><![CDATA[select id,post_period_no,post_period_name,post_period_flag,post_period_start_time,post_period_end_time,description from post_period where is_delete=false and id=(select max(id) from post_period where is_delete=false)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_POSTPERIOD_BY_DATETIME">
+        <value><![CDATA[select id,post_period_no,post_period_name,post_period_flag,post_period_start_time,post_period_end_time,description from post_period where is_delete=false and UNIX_TIMESTAMP('?')<UNIX_TIMESTAMP(post_period_end_time) and UNIX_TIMESTAMP('?')>UNIX_TIMESTAMP(post_period_start_time)]]></value>
+    </sql>
+</sql-config>

@@ -1,0 +1,162 @@
+<sql-config namespace="SELL">
+<sql name="SQL_GET_TBHB_DATA_WITH_YEAR_QUARTER_CATEGORIES">
+        <value><![CDATA[
+        SELECT
+        SUM(s.total_price) totalPrice
+    FROM
+        sell_shipments s
+    WHERE
+        s.bills_date IS NOT NULL
+    AND date_format(s.bills_date, '%Y') = ?
+    and  QUARTER((s.bills_date)) = ?
+    GROUP BY
+        QUARTER (
+            (s.bills_date)
+        )
+    ]]></value>
+    </sql>
+<sql name="SQL_GET_TBHB_DATA_WITH_YEAR_MONTH_CATEGORIES">
+    <value><![CDATA[
+    SELECT
+    sum(s.total_price) serie
+FROM
+    sell_shipments s
+WHERE
+    s.bills_date IS NOT NULL
+AND s.total_price IS NOT NULL
+AND date_format(s.bills_date, '%Y') = ? AND date_format(s.bills_date,'%m') = ?
+GROUP BY
+    date_format(s.bills_date, '%m')
+    ]]></value>
+    </sql>
+	<sql name="SQL_GET_SELL_ORDER">
+		<value><![CDATA[SELECT
+    O.order_number,
+    O.partner_id,
+    p.partner_code,
+    p.partner_name,
+    p.contacts_first_name,
+    p.contacts_last_name,
+    p.contacts_mobilephone,
+    O.outbound_storage_id,
+    O.summary,
+    O.is_draft,
+    O.total_price,
+    O.gift_price,
+    O.favorable_price,
+    O.gathering_price,
+    O.bills_date,
+    O.create_date,
+    O.create_by,
+    O.auditor,
+    O.audit_date,
+    O. OWNER,
+    S.storage_name,
+    U.nickname ownerName
+FROM
+    sell_order O
+LEFT JOIN business_partner p ON o.partner_id = p.id
+LEFT JOIN STORAGE S ON O.outbound_storage_id = S.id
+left join usr U on O.OWNER = U.id
+WHERE
+    O.order_number = ?
+    ]]></value>
+	</sql>
+	<sql name="SQL_GET_SELL_ORDER_ITEM">
+		<value><![CDATA[SELECT I.id,I.order_number,I.material_id,M.material_no,M.material_name,M.specifications_model,M.barcode,M.season,M.brand,U.unit_name,I.batch_number,I.production_date,I.counts,I.purchase_price,i.sell_price,I.discount,I.after_discount,I.tax_rate,I.tax,I.total,I.is_gift,I.shipments_amount,I.remark,I.shipments_date FROM sell_order_item I LEFT JOIN material M ON I.material_id=M.id LEFT JOIN material_unit U on M.unit_id=U.id WHERE I.order_number=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_ORDER">
+		<value><![CDATA[DELETE FROM sell_order  WHERE  order_number in (?) and is_draft=TRUE]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_ORDER_ITEM">
+		<value><![CDATA[DELETE FROM sell_order_item  WHERE  order_number in (?)]]></value>
+	</sql>
+	<sql name="SQL_GET_SELL_RETURNS">
+		<value><![CDATA[SELECT r.returns_number,r.partner_id,p.partner_code,p.partner_name,p.contacts_first_name,p.contacts_last_name,p.contacts_mobilephone,r.inbound_storage_id,s.storage_name,r.summary,r.is_draft,r.total_price,r.gift_price,r.favorable_price,r.pay_price,r.bills_date,r.create_date,r.create_by,r.auditor,r.audit_date,r.owner from sell_returns r  LEFT JOIN business_partner p ON r.partner_id=p.id left join storage s on r.inbound_storage_id = s.id WHERE r.returns_number=?]]></value>
+	</sql>
+	<sql name="SQL_GET_SELL_RETURNS_ITEM">
+		<value><![CDATA[SELECT m.material_name,m.material_no,m.specifications_model,m.barcode,m.season,m.brand,u.unit_name,I.id,I.returns_number,I.material_id,I.batch_number,I.production_date,I.counts,I.purchase_price,I.sell_price,I.discount,I.after_discount,I.tax_rate,I.tax,I.total,I.is_gift,I.remark,I.create_date,I.create_by FROM sell_returns_item I left join material m on I.material_id = m.id left join material_unit u on m.unit_id = u.id  WHERE I.returns_number=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_RETURNS">
+		<value><![CDATA[DELETE FROM sell_returns  WHERE  returns_number in (?) and is_draft=TRUE]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_RETURNS_ITEM">
+		<value><![CDATA[DELETE FROM sell_returns_item  WHERE  returns_number in (?)]]></value>
+	</sql>
+	<sql name="SQL_GET_SELL_SHIPMENTS">
+		<value><![CDATA[
+    SELECT
+    s.shipments_number,
+    s.partner_id,
+    p.partner_code,
+    p.partner_name,
+    p.contacts_first_name,
+    p.contacts_last_name,
+    p.contacts_mobilephone,
+    s.outbound_storage_id outbound_storage,
+    sto.storage_name storageName,
+    s.summary,
+    s.is_draft,
+    s.total_price,
+    s.gift_price,
+    s.favorable_price,
+    s.gathering_price,
+    s.bills_date,
+    s.create_date,
+    s.create_by,
+    s.auditor,
+    s.audit_date,
+    s. OWNER,
+    u.nickname ownerName
+FROM
+    sell_shipments s
+LEFT JOIN business_partner p ON s.partner_id = p.id
+left join usr u on s.owner = u.id
+left join storage sto on s.outbound_storage_id = sto.id
+WHERE
+    s.shipments_number =?
+        ]]></value>
+	</sql>
+	<sql name="SQL_GET_SELL_SHIPMENTS_ITEM">
+		<value><![CDATA[SELECT s.id,s.shipments_number,s.material_id,s.batch_number,s.production_date,s.counts,s.purchase_price,S.sell_price,s.discount,s.after_discount,s.tax_rate,s.tax,s.total,s.is_gift,s.remark,s.create_date,s.create_by,m.material_no,m.material_name,m.specifications_model,m.brand,m.season,m.barcode,u.unit_name from sell_shipments_item s LEFT JOIN material m on s.material_id=m.id LEFT JOIN material_unit u on m.unit_id=u.id  WHERE  s.shipments_number=?]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_ORDER">
+		<value><![CDATA[INSERT INTO sell_order(order_number,partner_id,outbound_storage_id,summary,is_draft,total_price,gift_price,favorable_price,gathering_price,bills_date,create_date,create_by,auditor,audit_date,owner,shipments_date,from_bills_no,tracking_no,customs_code)VALUES(?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_ORDER_ITEMS">
+		<value><![CDATA[INSERT INTO sell_order_item(order_number,material_id,batch_number,production_date,counts,purchase_price,sell_price,discount,after_discount,tax_rate,tax,total,is_gift,shipments_amount,remark,create_date,create_by,shipments_date)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_UPDATE_SELL_ORDER">
+		<value><![CDATA[UPDATE sell_order SET partner_id=?,outbound_storage_id=?,summary=?,is_draft=?,total_price=?,gift_price=?,favorable_price=?,gathering_price=?,bills_date=?,auditor=?,owner=? where order_number=?]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_RETURNS">
+		<value><![CDATA[INSERT INTO sell_returns(returns_number,partner_id,inbound_storage_id,summary,is_draft,total_price,gift_price,favorable_price,pay_price,bills_date,create_date,create_by,auditor,audit_date,owner)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_RETURNS_ITEMS">
+		<value><![CDATA[INSERT INTO sell_returns_item(returns_number,material_id,batch_number,production_date,counts,purchase_price,sell_price,discount,after_discount,tax_rate,tax,total,is_gift,remark,create_date,create_by)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_UPDATE_SELL_RETURNS">
+		<value><![CDATA[UPDATE sell_returns SET partner_id=?,inbound_storage_id=?,summary=?,is_draft=?,total_price=?,gift_price=?,favorable_price=?,pay_price=?,bills_date=?,auditor=?,audit_date=?,owner=? WHERE returns_number=?]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_SHIPMENTS">
+		<value><![CDATA[INSERT INTO sell_shipments(shipments_number,partner_id,outbound_storage_id,summary,is_draft,total_price,gift_price,favorable_price,gathering_price,bills_date,create_date,create_by,auditor,audit_date,owner,from_bills_no)VALUES(?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_ADD_SELL_SHIPMENTS_ITEMS">
+		<value><![CDATA[INSERT INTO sell_shipments_item(shipments_number,material_id,batch_number,production_date,counts,purchase_price,sell_price,discount,after_discount,tax_rate,tax,total,is_gift,remark,create_date,create_by)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_UPDATE_SELL_SHIPMENTS">
+		<value><![CDATA[UPDATE sell_shipments SET partner_id=?,outbound_storage_id=?,summary=?,is_draft=?,total_price=?,gift_price=?,favorable_price=?,gathering_price=?,bills_date=?,auditor=?,audit_date=?,owner=? WHERE shipments_number=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_SHIPMENTS">
+		<value><![CDATA[DELETE FROM sell_shipments WHERE shipments_number in (?) and is_draft=TRUE]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELL_SHIPMENTS_ITEMS">
+		<value><![CDATA[DELETE FROM sell_shipments_item WHERE shipments_number in (?)]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELLORDER_AND_SELLORDERITEM">
+		<value><![CDATA[delete sell_order,sell_order_item from   sell_order LEFT JOIN  sell_order_item on sell_order.order_number=sell_order_item.order_number where  sell_order.order_number=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_SELLSHIPMENTS_AND_SELLSHIPMENTSITEM_BYSHIPMENTSNUMBER">
+		<value><![CDATA[delete sell_shipments,sell_shipments_item from   sell_shipments LEFT JOIN  sell_shipments_item on sell_shipments.shipments_number=sell_shipments_item.shipments_number where  sell_shipments.shipments_number=?]]></value>
+	</sql>
+</sql-config>

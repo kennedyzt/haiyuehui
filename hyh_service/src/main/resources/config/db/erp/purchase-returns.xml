@@ -1,0 +1,26 @@
+<sql-config namespace="PURCHASERETURNS">
+    <sql name="SQL_ADD_PURCHASERETURNS">
+        <value><![CDATA[INSERT INTO purchase_returns(returns_number,from_bills_no, bills_date,partner_id, outbound_storage_id, summary, is_draft, total_price, gift_price, pay_price, favorable_price, create_date, create_by, auditor, audit_date, owner) VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?)]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASERETURNS">
+        <value><![CDATA[DELETE from purchase_returns where returns_number =?]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PURCHASERETURNS">
+        <value><![CDATA[UPDATE purchase_returns SET partner_id=?, outbound_storage_id=?, summary=?, is_draft=?, total_price=?, gift_price=?, pay_price=?, favorable_price=?, create_by = ?,auditor=?, audit_date=?, owner=? WHERE returns_number=?]]></value>
+    </sql>
+    <sql name="SQL_ADD_PURCHASERETURNSITEM">
+        <value><![CDATA[INSERT into purchase_returns_item(returns_number,material_id,batch_number,production_date,counts,purchase_price,discount,after_discount,tax_rate,tax,total,is_gift,remark,create_date,create_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)]]></value>
+    </sql>
+    <sql name="SQL_GET_PURCHASERETURNS_DETAILS">
+        <value><![CDATA[SELECT p.returns_number returnsNumber,p.is_draft isDraft,p.owner,p.total_price totalPrice,p.gift_price giftPrice,p.favorable_price favorablePrice, p.auditor,p.pay_price payPrice,p.owner,p.bills_date billsDate,p.outbound_storage_id outboundStorageId,p.partner_id partnerId,p.summary,b.partner_name partnerName,b.partner_code partnerCode,b.contacts_first_name contactsFirstName,b.contacts_last_name contactsLastName,b.mobilephone,s.storage_name storageName,u.user_name ownerName from purchase_returns p  LEFT JOIN business_partner b on p.partner_id=b.id  LEFT JOIN storage s on p.outbound_storage_id=s.id left join usr u on p.owner=u.id where p.returns_number = ?]]></value>
+    </sql>
+    <sql name="SQL_GET_PURCHASERETURNSITEM_BYID">
+        <value><![CDATA[select p.returns_number returnsNumber,p.purchase_price purchasePrice,p.material_id materialId,p.batch_number batchNumber,p.production_date productionDate,p.counts,p.discount,p.after_discount afterDiscount,p.tax_rate taxTate,p.tax,p.tax_rate taxRate,p.total,p.is_gift isGift,p.remark,p.create_date createDate,p.create_by createBy,m.material_no materialNo,m.material_name materialName,m.specifications_model specificationsModel ,m.brand,m.season,m.barcode,m.is_batch isBatch,ma.type_name typeName,unit.unit_name unitName from purchase_returns_item p left join material m on p.material_id=m.id left join material_type ma on m.material_type=ma.id left join material_unit unit on m.unit_id=unit.id where p.returns_number=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PURCHASERETURNS_AND_PURCHASERETURNSITEM_BYRETURNSNUMBER">
+        <value><![CDATA[delete purchase_returns,purchase_returns_item from purchase_returns LEFT JOIN  purchase_returns_item on purchase_returns.returns_number=purchase_returns_item.returns_number where  purchase_returns.returns_number=?]]></value>
+    </sql>
+        <sql name="SQL_DELETE_PURCHASERETURNSITEM">
+        <value><![CDATA[DELETE from purchase_returns_item where returns_number =?]]></value>
+    </sql>>
+</sql-config>

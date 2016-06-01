@@ -1,0 +1,5 @@
+<sql-config namespace="BULKPARTNERTRANSACTION">
+    <sql name="SQL_INSERT_BULKPARTNERTRANSACTION">
+        <value><![CDATA[INSERT INTO bulk_partner_transaction(id,success_counts,failed_counts,created_date,created_by) VALUES(?,?,?,NOW(),?)]]></value>
+    </sql>
+</sql-config>

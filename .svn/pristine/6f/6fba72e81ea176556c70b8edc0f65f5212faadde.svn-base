@@ -1,0 +1,182 @@
+<sql-config namespace="GROUP">
+     <sql name="SQL_INSERT_GROUP">
+        <value>
+            <![CDATA[
+                INSERT INTO groups(
+                    group_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    user_account
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    NOW(),
+                    ?,
+                    ?
+                )
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_GROUP">
+        <value>
+            <![CDATA[
+                DELETE from  groups
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_GROUP_BY_ID">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    group_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by,
+                    user_account
+                FROM groups
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_GROUP">
+        <value>
+            <![CDATA[
+                update groups
+                set group_name = ?,
+                    description = ?,
+                    is_delete = ?,
+                    update_date = now(),
+                    update_by = ?
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+     <sql name="SQL_INSERT_USER_GROUP">
+        <value>
+            <![CDATA[
+                INSERT INTO user_group(
+                    user_id,
+                    group_id,
+                    is_delete,
+                    create_date,
+                    create_by
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    NOW(),
+                    ?
+                )
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_USER_GROUP">
+        <value>
+            <![CDATA[
+                DELETE from user_group
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_USER_GROUP_BY_ID">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    user_id,
+                    group_id,
+                    is_delete,
+                    create_by,
+                    create_date
+                FROM user_group
+                where id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_ALL_GROUPS">
+        <value>
+            <![CDATA[
+                SELECT id,
+                    group_name,
+                    description,
+                    is_delete,
+                    create_date,
+                    create_by,
+                    update_date,
+                    update_by,
+                    user_account
+                FROM groups
+                WHERE  is_delete = 0
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_GROUP_OF_USER">
+        <value>
+            <![CDATA[
+                DELETE from user_group
+                where user_id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_GROUP_OF_USER">
+        <value>
+            <![CDATA[
+                select ug.group_id, g.group_name
+                from user_group ug
+                left join groups g on ug.group_id = g.id
+                where g.is_delete = 0
+                and ug.user_id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_GET_GROUP_PERMISSIONS">
+        <value>
+            <![CDATA[
+                select p.id, mn.id node_id, mn.node_name,  p.group_id, mn.`level`, mn.sequence, mn.parent_id,mn.menu_root,mn.icon,
+                mn.node_url, p.is_add,
+                p.is_delete,p.is_edit,p.is_print
+                FROM menu_node mn
+                left join (select * from permission p1 where p1.group_id = ?) p on mn.id = p.node_id
+                where mn.user_account = ?
+                order by mn.sequence
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_DELETE_GROUP_PERMISSIONS">
+        <value>
+            <![CDATA[
+                delete from permission
+                where group_id = ?
+            ]]>
+        </value>
+    </sql>
+    <sql name="SQL_ADD_GROUP_PERMISSIONS">
+        <value>
+            <![CDATA[
+                INSERT INTO permission(
+                    group_id,
+                    node_id,
+                    is_add,
+                    is_delete,
+                    is_edit,
+                    is_print,
+                    create_date
+                )VALUES(
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    NOW()
+                )
+            ]]>
+        </value>
+    </sql>
+</sql-config>

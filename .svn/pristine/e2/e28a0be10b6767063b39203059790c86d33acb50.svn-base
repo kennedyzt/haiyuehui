@@ -1,0 +1,63 @@
+table, tbody td {
+     font-size: 10px;
+     border: 1 solid #000000;
+     border-collapse: collapse;
+}
+
+body {
+     width: 100%;
+}
+
+.head_section {
+     width: 96%;
+     height: auto;
+     overflow: hidden;
+     margin: auto;
+}
+
+.partner_text_div_3 {
+     width: 33%;
+     float: left;
+}
+
+.common_text_val {
+     width: 65%;
+     float: left;
+     height: 100%;
+     color: #777070;
+}
+
+.common_text_title {
+     width: 35%;
+     float: left;
+     text-align: right;
+     height: 100%;
+     font-size: 12px;
+}
+
+.common_text_div {
+     height: 25px;
+     line_height: 25px;
+}
+
+#detail_order_pick {
+     font-size: 5px;
+}
+
+.readonly_text_common {
+     font-size: 12px;
+     margin: 0 0 0 10px;
+     border: 0;
+     outline: none;
+     padding: 0;
+}
+
+.grid_page_text_div {
+     width: 25%;
+     float: left;
+}
+
+.body-items {
+     width: 96%;
+     margin: auto;
+}

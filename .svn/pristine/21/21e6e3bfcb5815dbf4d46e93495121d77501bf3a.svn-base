@@ -1,0 +1,101 @@
+<sql-config namespace="MATERIAL">
+    <sql name="SQL_GET_BATCH_NUMBER_FLAG">
+        <value><![CDATA[SELECT count(*) from inventory_receipt_item where batch_number = ? AND material_id= ? ]]></value>
+    </sql>
+    <sql name="SQL_GET_ROW_NUMBER">
+        <value><![CDATA[SELECT row_nubmer rowNumber from inventory_receipt_item where batch_number = ? AND material_id= ? ]]></value>
+    </sql>
+	<sql name="SQL_ADD_MATERIAL_GROUP">
+		<value><![CDATA[INSERT INTO material_group(group_name,description,is_delete,create_date,create_by)VALUES(?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_GET_ALL_MATERIAL_GROUP">
+		<value><![CDATA[SELECT g.id,g.group_name,g.description,g.is_delete,g.create_date,g.create_by from material_group g ORDER BY g.id]]></value>
+	</sql>
+	<sql name="SQL_ADD_MATERIAL_TYPE">
+		<value><![CDATA[INSERT INTO material_type(type_name,level,description,parent_type_id,is_delete,is_leafnode,create_date,create_by)VALUES(?,?,?,?,?,?,NOW(),?)]]></value>
+	</sql>
+	<sql name="SQL_ADD_MATERIAL_UNIT">
+		<value><![CDATA[INSERT INTO material_unit(unit_name,description,is_delete,create_date,create_by,unit_no)VALUES(?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_GET_MATERIALUNITFLAG_BY_ID">
+		<value><![CDATA[SELECT check_material_unit_used(?)]]></value>
+	</sql>
+	<sql name="SQL_GET_ALL_MATERIAL_TYPE">
+		<value><![CDATA[SELECT g.id,g.type_name,g.description,g.parent_type_id,g.`level`,g.is_delete,g.is_leafnode,g.create_date,g.create_by,m.type_name parent_type_name FROM material_type g LEFT JOIN material_type m ON g.parent_type_id = m.id where g.is_delete = false ORDER BY g.`level` asc, g.id asc]]></value>
+	</sql>
+	<sql name="SQL_GET_ALL_MATERIAL_UNIT">
+		<value><![CDATA[SELECT M.id,M.unit_no,M.unit_name,M.description,M.is_delete,M.create_date,M.create_by,M.update_date,M.update_By from material_unit M where M.is_delete=FALSE ORDER BY M.unit_no asc]]></value>
+	</sql>
+	<sql name="SQL_GET_MATERIALFLAG_BY_ID">
+		<value><![CDATA[SELECT check_material_used(?)]]></value>
+	</sql>
+	<sql name="SQL_GET_CHILD_MATERIAL_TYPE">
+		<value><![CDATA[SELECT t.id,t.type_name,t.description,t.parent_type_id,t.level,t.is_delete,t.is_leafnode,t.create_date,t.create_by from material_type t where t.parent_type_id=? and is_delete = false]]></value>
+	</sql>
+	<sql name="SQL_GET_ALL_MATERIAL">
+		<value><![CDATA[SELECT m.id,m.material_no,m.material_name,m.foreign_name,m.material_type,m.brand,m.specifications_model,m.season,m.usage_id,m.unit_id,m.barcode,m.shops,m.is_batch,m.expiration_date,m.partner_id,m.min_order,m.max_inventory,m.min_inventory,m.is_enable,m.description,m.is_delete,m.transaction_id,m.create_date,m.create_by,m.update_date,m.update_by from material m WHERE m.is_enable=true ORDER BY m.id]]></value>
+	</sql>
+	<sql name="SQL_ADD_MATERIAL">
+		<value><![CDATA[INSERT INTO material (material_no,material_name,foreign_name,material_type,brand,specifications_model,season,is_purchase,is_sell,is_inventory,unit_id,barcode,shops,is_batch,expiration_date,partner_id,min_order,max_inventory,min_inventory,is_enable,description,is_delete,transaction_id,create_date,create_by,legal_unit,legal_translation_quantity,entry_unit,entry_translation_quantity,manufacturer,provenance,ebec,eben,hscode,post_tax_number,custom1,custom2,custom3,item_no,weight,post_tax_rate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)]]></value>
+	</sql>
+	<sql name="SQL_DELETE_MATERIAL">
+		<!--<value><![CDATA[UPDATE material set is_delete=true,update_date=now(),update_by=? where id=?]]></value>-->
+        <value><![CDATA[delete from material where id=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_MATERIAL_UNIT">
+		<value><![CDATA[UPDATE MATERIAL_UNIT set is_delete=true,update_date=now(),update_by=? where id=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_MATERIAL_TYPE">
+		<value><![CDATA[UPDATE material_type set is_delete=true,update_date=now(),update_by=? where id=?]]></value>
+	</sql>
+	<sql name="SQL_UPDATE_MATERIAL_TYPE_BY_DELETE_ITS_SON_NODE">
+		<value><![CDATA[UPDATE material_type set is_leafnode=true where id=?]]></value>
+	</sql>
+	<sql name="SQL_GET_MATERIAL_GROUP_IS_EXIST">
+		<value><![CDATA[SELECT COUNT(1) FROM material_group G WHERE G.id=?]]></value>
+	</sql>
+	<sql name="SQL_GET_MATERIAL_ALL_IS_EXIST">
+		<value><![CDATA[SELECT COUNT(1) FROM material m where m.id in (?)]]></value>
+	</sql>
+	<sql name="SQL_ADD_MATERIAL_GROUP_RELATION">
+		<value><![CDATA[INSERT INTO material_group_relation(material_id,material_group_id,is_delete,create_date,create_by)VALUES(?,?,?,now(),?)]]></value>
+	</sql>
+	<sql name="SQL_DELETE_MATERIAL_GROUP_RELATION">
+		<value><![CDATA[DELETE FROM material_group_relation where id=?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_MATERIAL_GROUP_RELATION_BY_GROUP_ID">
+		<value><![CDATA[DELETE FROM material_group_relation where material_group_id=?]]></value>
+	</sql>
+	<sql name="SQL_ADD_INVENTORY_WARNING">
+		<value><![CDATA[INSERT INTO inventory_warning(material_id,storage_id,max_inventory,min_inventory,create_by,create_date)VALUES(?,?,?,?,?,now())]]></value>
+	</sql>
+	<sql name="SQL_GET_INVENTORY_WARNING_BY_MATERIAL_ID">
+		<value><![CDATA[SELECT id,material_id,storage_id,max_inventory,min_inventory from inventory_warning where material_id = ?]]></value>
+	</sql>
+	<sql name="SQL_DELETE_INVENTORY_WARNING_BY_MATERIAL_ID">
+		<value><![CDATA[DELETE FROM inventory_warning where material_id = ?]]></value>
+	</sql>
+	<sql name="SQL_FIND_INVENTORY_WARNING_BY_MATERIAL_ID_AND_STORAGE_ID">
+		<value><![CDATA[SELECT min_inventory,max_inventory FROM inventory_warning where material_id = ? and storage_id = ?]]></value>
+	</sql>
+	<sql name="SQL_SELECT_MATERIALBATCH_BY_MATERIALNO_AND_BATCH_NUMBER"> 
+		<value><![CDATA[
+    SELECT
+        m.material_no,
+        m.material_name,
+        m.brand,
+        m.season,
+        m.unit_id,
+        u.unit_name unitName,
+        m.item_no,
+        m.barcode,
+        m.specifications_model,
+        b.batch_number,
+        b.production_date,
+        b.expiration_date,
+        SUM(CONVERT(CONCAT(IF(b.is_inbound,'+','-'),b.counts),DECIMAL)) counts
+   from material  m left join material_batch b on m.id = b.material_id left join material_unit u on m.unit_id = u.id 
+   where m.id = ? and b.batch_number = ?
+        ]]></value>
+	</sql>
+</sql-config>

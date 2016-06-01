@@ -1,0 +1,4 @@
+.period_text_div{
+    width: 50%;
+    float: left;
+}

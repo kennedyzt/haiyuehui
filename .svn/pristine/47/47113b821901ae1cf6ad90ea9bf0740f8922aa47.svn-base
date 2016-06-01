@@ -1,0 +1,208 @@
+<sql-config namespace="READYSHIPMENTS">
+    <sql name="SQL_GET_BATCH_COUNTS">
+        <value><![CDATA[SELECT
+    b.material_id,
+    b.production_date,
+    b.expiration_date,
+    b.uuid,
+    b.batch_number,
+    b.price,
+    l.inventory_id,
+    i.storage_location_id,
+    i.storage_id,
+    SUM(
+        IF (
+            b.is_inbound,
+            b.counts,
+            0 - b.counts
+        )
+    ) counts,
+    i.promised_amount
+FROM
+    inventory_log l
+LEFT JOIN inventory i ON i.id = l.inventory_id
+LEFT JOIN material_batch b ON l.batch_uuid = b.uuid
+WHERE
+    i.storage_id != 0
+AND b.material_id = ?
+GROUP BY
+    i.material_id,
+    I.storage_id,
+    i.storage_location_id,
+    b.batch_number
+HAVING counts > 0
+ORDER BY
+    b.production_date,
+    counts]]>
+        </value>
+    </sql>
+    <sql name="ADD_READY_SHIPMENTS_ITEM">
+        <value><![CDATA[INSERT INTO ready_shipments_item( order_number, material_id, batch_number, production_date, due_date, counts,purchase_price,sell_price,discount,after_discount,tax_rate,tax,total,is_gift, storage_location_id,create_date) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())]]>
+        </value>
+    </sql>
+    <sql name="ADD_READY_SHIPMENTS">
+        <value><![CDATA[INSERT INTO ready_shipments( order_number,total_price,gift_price,favorable_price,gathering_price, from_bills_no,storage_id, bills_date, consignee_name, consignee_address,consigness_phone,consigness_postcode,create_date,summary,shop_number,partner_id) values(?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?)]]>
+        </value>
+    </sql>
+    <sql name="SQL_SELECT_READY_SHIPMENTS_BYID">
+        <value><![CDATA[SELECT r.order_number, r.from_bills_no,r.storage_id,r.bills_date, r.partner_id, r.summary, r.total_price, r.gift_price, 
+                        r.favorable_price, r.gathering_price, r.create_date, r.create_by, r.auditor, r.audit_date, r.owner, 
+                        r.shipments_date, r.consignee_name, r.consignee_address, r.consigness_phone, r.consigness_postcode, 
+                        r.status ,s.shop_name,sto.storage_name,b.partner_name ,sell.order_number sellOrderNumber,sell.tracking_no ,sell.customs_code,r.weight,SUM(item.counts) counts,
+                        SUM(m.weight*item.counts) materialsWeight from ready_shipments r left join ready_shipments_item item ON item.order_number=r.order_number left join shop s on s.shop_no = r.shop_number LEFT JOIN storage sto ON sto.id=r.storage_id left join business_partner b on r.partner_id = b.id left join sell_order sell on sell.from_bills_no=r.from_bills_no LEFT JOIN material m on item.material_id=m.id where r.order_number = ? GROUP BY r.order_number]]>
+        </value>
+    </sql>
+    <sql name="SQL_SELECT_READY_SHIPMENTS_BYID_WITH_EXTRA_INFO">
+        <value><![CDATA[SELECT
+    rs.order_number,
+    rs.from_bills_no,
+    rs.bills_date,
+    rs.partner_id,
+    rs.summary,
+    rs.total_price,
+    rs.gift_price,
+    rs.favorable_price,
+    rs.gathering_price,
+    rs.create_date,
+    rs.create_by,
+    rs.auditor,
+    rs.audit_date,
+    rs.OWNER,
+    rs.shipments_date,
+    rs.consignee_name,
+    rs.consignee_address,
+    rs.consigness_phone,
+    rs.consigness_postcode,
+    rs.STATUS,
+    sum(rsi.counts)-sum(rsi.confirm_amount) noAuditNumber,
+  sum(rsi.confirm_amount) auditNumber
+FROM
+    ready_shipments rs LEFT JOIN ready_shipments_item rsi on rs.order_number = rsi.order_number
+WHERE
+    rs.order_number = ?
+GROUP BY rs.order_number]]>
+        </value>
+    </sql>
+    <sql name="SQL_SELECT_READY_SHIPMENTS_BY_STATUS">
+        <value><![CDATA[SELECT
+    rs.order_number,
+    rs.from_bills_no,
+    rs.bills_date,
+    rs.partner_id,
+    rs.summary,
+    rs.total_price,
+    rs.gift_price,
+    rs.favorable_price,
+    rs.gathering_price,
+    rs.create_date,
+    rs.create_by,
+    rs.auditor,
+    rs.audit_date,
+    rs.OWNER,
+    rs.shipments_date,
+    rs.consignee_name,
+    rs.consignee_address,
+    rs.consigness_phone,
+    rs.consigness_postcode,
+    rs.STATUS,
+    sum(rsi.counts)-sum(rsi.confirm_amount) noAuditNumber,
+    sum(rsi.confirm_amount) auditNumber
+FROM
+    ready_shipments rs
+LEFT JOIN ready_shipments_item rsi on rs.order_number = rsi.order_number 
+WHERE rs.STATUS = ? 
+group by rs.order_number
+    ]]>
+        </value>
+    </sql>
+    <sql name="SQL_SELECT_READY_SHIPMENTS_ITEMS_BYID">
+        <value><![CDATA[SELECT
+    i.id,
+    i.order_number,
+    i.material_id,
+    i.batch_number,
+    i.production_date,
+    i.due_date,
+    i.counts,
+    i.purchase_price,
+    i.sell_price,
+    i.discount,
+    i.after_discount,
+    i.tax_rate,
+    i.tax,
+    i.total,
+    i.is_gift,
+    i.shipments_amount,
+    i.confirm_amount,
+    i.remark,
+    i.create_date,
+    i.create_by,
+    i.shipments_date,
+    i.storage_location_id,
+    i. STATUS,
+    m.material_no,
+    m.barcode,
+    m.material_name,
+    m.specifications_model,
+    m.weight,
+    u.unit_name,
+    s.location_name,
+    so.tracking_no,
+    so.customs_code
+    FROM
+    ready_shipments_item i
+LEFT JOIN material m ON i.material_id = m.id
+LEFT JOIN material_unit u ON u.id = m.unit_id
+LEFT JOIN storage_location s on s.id = i.storage_location_id
+LEFT JOIN ready_shipments r ON i.order_number=r.order_number
+LEFT JOIN sell_order so ON so.from_bills_no=r.from_bills_no
+WHERE
+    i.order_number = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_READYSHIPMENTS_ITEM_CONFIRMNUMBER_FOR_AUDIT_BY_ITEMID">
+        <value><![CDATA[
+        update ready_shipments_item set confirm_amount = ? where id = ?
+        ]]>
+        </value>
+    </sql>
+    <sql name="UPDATE_PROMISED_LOCATION_AMOUNT">
+        <value><![CDATA[UPDATE inventory SET promised_location_amount = promised_location_amount + ? WHERE id = ?]]>
+        </value>
+    </sql>
+    <sql name="UPDATE_PROMISED_AMOUNT">
+        <value><![CDATA[
+        UPDATE inventory
+            SET promised_amount = (
+                SELECT t.amount FROM
+                (
+                    SELECT
+                        sum(i.promised_location_amount) amount
+                    FROM
+                        inventory i
+                    WHERE
+                        i.material_id = ?
+                ) t ) WHERE material_id = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_STATUS_BYID">
+        <value><![CDATA[UPDATE ready_shipments SET status = ? WHERE order_number = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_READYSHIPMENTS_STATUS_FOR_AUDIT_BY_ORDERNUMBER">
+        <value><![CDATA[UPDATE ready_shipments SET status = ?  WHERE order_number = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_READYSHIPMENTS_WEIGHT_FOR_PACK_BY_ORDERNUMBER">
+        <value><![CDATA[UPDATE ready_shipments SET weight = ?  WHERE order_number = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_READYSHIPMENTS_ITEM_CONFIRMNUMBER_FOR_AUDIT_BY_ORDERNUMBER">
+        <value><![CDATA[UPDATE ready_shipments_item rsi SET rsi.confirm_amount = rsi.counts  WHERE order_number = ?]]>
+        </value>
+    </sql>
+    <sql name="SQL_UPDATE_PRINT_STATUS_BYID">
+        <value><![CDATA[UPDATE ready_shipments SET print_status = ? WHERE order_number = ?]]>
+        </value>
+    </sql>
+</sql-config>

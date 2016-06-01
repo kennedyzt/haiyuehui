@@ -1,0 +1,41 @@
+<sql-config namespace="PARTNERGROUP">
+    <sql name="SQL_INSERT_PARTNERGROUP">
+        <value><![CDATA[INSERT INTO partner_group(group_name,description,partner_type,is_delete,create_date,create_by) values(?,?,?,false,now(),?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_PARTNERGROUP">
+        <value><![CDATA[UPDATE partner_group set group_name=?,description=?,update_date=now(),update_by=? where id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_PARTNERGROUP">
+        <value><![CDATA[UPDATE partner_group set is_delete=true,update_date=now(),update_by=? where id=?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PARTNERGROUP">
+        <value><![CDATA[SELECT id id,group_name groupName,description description,partner_type partnerType,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_group where is_delete=false]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BYGROUPNAME">
+        <value><![CDATA[SELECT count(*) from partner_group p where p.group_name=? and p.partner_type = ? and p.is_delete=FALSE ]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BY_PARTNER_GROUP_NAME">
+        <value><![CDATA[SELECT id id,group_name groupName,description description,partner_type partnerType,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_group where group_name=?]]></value>
+    </sql>
+    <sql name="SQL_GET_PARTNER_GROUP_BYPAGE">
+        <value><![CDATA[SELECT id id,group_name groupName,description description,partner_type partnerType,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_group where partner_type =? and is_delete=false limit ?,?]]></value>
+    </sql>
+    <sql name="SQL_GET_TOTAL_RECORDS">
+        <value><![CDATA[SELECT count(*) from partner_group where partner_type =? and is_delete=false limit ?,?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PARTNERGROUP_BYTYPE">
+        <value><![CDATA[SELECT id id,group_name groupName,description description,partner_type partnerType,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_group where is_delete=false and partner_type = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PARTNERGROUP_BYID">
+        <value><![CDATA[SELECT id id,group_name groupName,description description,partner_type partnerType,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from partner_group where id =?]]></value>
+    </sql>
+    <sql name="SQL_MANAGEMENT_PARTNERGROUP">
+        <value><![CDATA[UPDATE business_partner set partner_group = ? WHERE id=?]]></value>
+    </sql>
+    <sql name="SQL_GET_PARTNERGROUPUSED1_BY_ID">
+        <value><![CDATA[SELECT count(*) from business_partner where partner_group = ?]]></value>
+    </sql>
+    <sql name="SQL_GET_PARTNERGROUPUSED2_BY_ID">
+        <value><![CDATA[SELECT count(*) from bulk_partner_errors where partner_group = ?]]></value>
+    </sql>
+</sql-config>

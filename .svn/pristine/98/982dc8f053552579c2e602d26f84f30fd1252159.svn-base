@@ -1,0 +1,20 @@
+<sql-config namespace="COUNTRYREGION">
+    <sql name="SQL_INSERT_COUNTRYREGION">
+        <value><![CDATA[INSERT INTO country_region(country_region_name,create_by,create_date) VALUES(?,?,now())]]></value>
+    </sql>
+    <sql name="SQL_GET_ALL_COUNTRYREGION">
+        <value><![CDATA[select id,country_region_name from country_region]]></value>
+    </sql>
+    <sql name="SQL_GET_COUNTRYREGION_BYID">
+        <value><![CDATA[select id,country_region_name from country_region where id = ?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_COUNTRYREGION_BYID">
+        <value><![CDATA[delete from country_region where id = ?]]></value>
+    </sql>
+    <sql name="SQL_GET_BY_COUNTRYREGION_NAME">
+        <value><![CDATA[select count(*) from country_region where country_region_name = ?]]></value>
+    </sql>
+    <sql name="SQL_CHECK_COUNTRYREGION_ISUSED">
+        <value><![CDATA[select count(*) from business_partner b WHERE b.country_region_id = ? ]]></value>
+    </sql>
+</sql-config>

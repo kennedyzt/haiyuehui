@@ -1,0 +1,1 @@
+native2ascii -encoding UTF-8 resource.properties siping-i18n_zh_CN.properties

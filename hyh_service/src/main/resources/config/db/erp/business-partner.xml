@@ -1,0 +1,39 @@
+<sql-config namespace="BUSINESSPARTNER">
+    <sql name="SQL_INSERT_BUSINESSPARTNER">
+        <value><![CDATA[INSERT INTO business_partner(partner_code,partner_type,partner_name,foreign_name,partner_group,phone,mobilephone,fax,email,website,description,is_enable,is_delete,address_en,business_type,country_region_id,postal_code,contacts_last_name,contacts_first_name,contacts_gender,contacts_phone,contacts_mobilephone,contacts_fax,contacts_email,contacts_description,address,create_date,create_by) values(?,?,?,?,?,?,?,?,?,?,?,?,false,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?)]]></value>
+    </sql>
+    <sql name="SQL_UPDATE_BUSINESSPARTNER">
+        <value><![CDATA[UPDATE business_partner set partner_type=?,partner_name=?,foreign_name=?,partner_group=?,phone=?,mobilephone=?,fax=?,email=?,website=?,description=?,is_enable=?,address_en = ?,business_type = ?,country_region_id = ?,postal_code = ?,contacts_last_name=?,contacts_first_name=?,contacts_gender=?,contacts_phone=?,contacts_mobilephone=?,contacts_fax = ?,contacts_email = ?,contacts_description=?,address=?,update_date=now(),update_by=? where id=?]]></value>
+    </sql>
+    <sql name="SQL_DELETE_BUSINESSPARTNER">
+        <value><![CDATA[UPDATE business_partner set is_delete=true where id=?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BUSINESSPARTNER">
+        <value><![CDATA[SELECT id id,partner_code partnerCode,partner_type partnerType,partner_name partnerName,foreign_name foreignName,partner_group partnerGroup,phone phone,mobilephone mobilephone,fax fax,email email,website website,contacts_last_name contactsLastName,contacts_first_name contactsFirstName,contacts_gender contactsGender,contacts_phone contactsPhone,contacts_mobilephone contactsMobilephone,contacts_description contactsDesiption,address address,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from business_partner where is_enable=true and is_delete=false]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BYPARTNERCODE">
+        <value><![CDATA[SELECT count(*) from business_partner b where b.partner_code=? AND b.partner_type = ?]]></value>
+    </sql>
+    <sql name="SQL_SELECT_TOTALRECORDS">
+        <value><![CDATA[SELECT count(*) from business_partner b where is_delete=false and partner_type=?
+ ]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BUSINESSPARTNER_BYPAGE">
+        <value><![CDATA[SELECT id id,partner_code partnerCode,partner_type partnerType,partner_name partnerName,foreign_name foreignName,partner_group partnerGroup,phone phone,mobilephone mobilephone,fax fax,email email,website website,description,is_enable isEnable,contacts_last_name contactsLastName,contacts_first_name contactsFirstName,contacts_gender contactsGender,contacts_phone contactsPhone,contacts_mobilephone contactsMobilephone,contacts_description contactsDescription,address address,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from business_partner b where is_delete=false and partner_type=? and (partner_code=? or partner_name=? or partner_group=? or is_enable=?) limit ?,?]]></value>
+    </sql>
+    <sql name="SQL_BATCH_INSERT_BUSINESSPARTNER">
+        <value><![CDATA[INSERT INTO business_partner(partner_code,partner_type,partner_name,foreign_name,partner_group,phone,mobilephone,fax,email,website,description,is_enable,contacts_last_name,contacts_first_name,contacts_gender,contacts_phone,contacts_mobilephone,contacts_description,address,transaction_id,create_date,create_by) values(?,?,?,?,?,?,?,?,?,?,?,true,?,?,?,?,?,?,?,?,now(),?)]]></value>
+    </sql>
+    <sql name="SQL_SELECT_PARTNERCODE">
+        <value><![CDATA[SELECT partner_code partnerCode from business_partner]]></value>
+    </sql>
+    <sql name="SQL_SELECT_BUSINESSPARTNER_BYID">
+        <value><![CDATA[SELECT b.id id,b.partner_code partnerCode,b.partner_type partnerType,b.partner_name partnerName,b.foreign_name foreignName,b.partner_group partnerGroup,b.phone,b.mobilephone,b.fax,b.email,b.website,b.description,b.is_enable isEnable,b.address_en addressEn,b.business_type businessType,b.country_region_id countryRegionId,b.postal_code postalCode,b.contacts_last_name contactsLastName,b.contacts_first_name contactsFirstName,b.contacts_gender contactsGender,b.contacts_phone contactsPhone,b.contacts_mobilephone contactsMobilephone,b.contacts_fax contactsFax,b.contacts_email contactsEmail,b.contacts_description contactsDescription,b.address,b.create_date createDate,b.create_by createBy,b.update_date updateDate,b.update_by updateBy,g.group_name groupName,country.country_region_name countryRegionName from business_partner b left join partner_group g on g.id = b.partner_group left join country_region country on country.id = b.country_region_id where b.id=?]]></value>
+    </sql>
+    <sql name="GET_BUSINESSPARTNER_BYKEY">
+        <value><![CDATA[SELECT id id,partner_code partnerCode,partner_type partnerType,partner_name partnerName,foreign_name foreignName,partner_group partnerGroup,phone phone,mobilephone mobilephone,fax fax,email email,website website,description,is_enable isEnable,contacts_last_name contactsLastName,contacts_first_name contactsFirstName,contacts_gender contactsGender,contacts_phone contactsPhone,contacts_mobilephone contactsMobilephone,contacts_description contactsDescription,address address,create_date createDate,create_by createBy,update_date updateDate,update_by updateBy from business_partner b where is_delete=false and partner_type=? and (partner_code like CONCAT('%',?,'%') or partner_name like CONCAT('%',?,'%') )]]></value>
+    </sql>
+    <sql name="SQL_CHECK_PARTNERID_ISUSED">
+        <value><![CDATA[select check_partner_used(?)]]></value>
+    </sql>
+</sql-config>
